@@ -31,16 +31,7 @@ import { LoginFormComponent } from './login-form/login-form.component';
   ],
 })
 export class LoginPage implements OnInit {
-  message: string | null = null;
-  color: string | null = null;
-
   constructor(@Inject('APP_NAME') public appName: string) {}
 
   ngOnInit() {}
-
-  onLoginStatus(response: { status: string; message: string }) {
-    this.message = response.message;
-    this.color = response.status === 'success' ? 'success' : 'danger';
-    console.log('Login form submitted with values page:', response);
-  }
 }

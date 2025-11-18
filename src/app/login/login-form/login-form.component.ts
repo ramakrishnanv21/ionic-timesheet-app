@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, output } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   IonButton,
@@ -32,7 +32,6 @@ import { UserResponse } from '../../model/user';
   ],
 })
 export class LoginFormComponent implements OnInit {
-  login = output<{ status: 'success' | 'failed'; message: string }>();
   private router = inject(Router);
   private authService = inject(AuthService);
   private loadingController = inject(LoadingController);
