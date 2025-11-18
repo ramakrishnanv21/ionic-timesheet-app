@@ -10,18 +10,18 @@ import {
   IonInput,
   IonNote,
   LoadingController,
-  ToastController
+  ToastController,
 } from '@ionic/angular/standalone';
 import { AuthService } from '../../services/auth.service';
 import { Router, RouterLink } from '@angular/router';
-import { SignupData } from '../../model/user';
 import { UserValidationService } from '../user-validator.service';
 
 @Component({
   selector: 'app-signup-form',
   templateUrl: './signup-form.component.html',
   styleUrls: ['./signup-form.component.scss'],
-  imports: [IonNote,  
+  imports: [
+    IonNote,
     RouterLink,
     IonGrid,
     IonButton,
@@ -30,11 +30,11 @@ import { UserValidationService } from '../user-validator.service';
     IonRow,
     IonCol,
     IonItem,
-    IonInput
+    IonInput,
   ],
-  providers: [UserValidationService]
+  providers: [UserValidationService],
 })
-export class SignupFormComponent  implements OnInit {
+export class SignupFormComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
   private router = inject(Router);
   private authService = inject(AuthService);
@@ -42,14 +42,23 @@ export class SignupFormComponent  implements OnInit {
   private loadingController = inject(LoadingController);
   private toastController = inject(ToastController);
 
-  signupForm = this.formBuilder.group({
-    email: ['', [Validators.required, Validators.email], [this.userValidationService.checkEmail()]],
-    username: ['', Validators.required, this.userValidationService.checkUsername()],
-    password: ['', [Validators.required, Validators.minLength(6)]],
-    confirm_password: ['', [Validators.required, Validators.minLength(6)]],
-  },
-  { validators: this.userValidationService.passwordMatchValidator }
-);
+  signupForm = this.formBuilder.group(
+    {
+      email: [
+        '',
+        [Validators.required, Validators.email],
+        [this.userValidationService.checkEmail()],
+      ],
+      username: [
+        '',
+        Validators.required,
+        this.userValidationService.checkUsername(),
+      ],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirm_password: ['', [Validators.required, Validators.minLength(6)]],
+    },
+    { validators: this.userValidationService.passwordMatchValidator }
+  );
   constructor() {}
 
   ngOnInit() {}
@@ -59,28 +68,33 @@ export class SignupFormComponent  implements OnInit {
       return;
     }
     const { email, username, password } = this.signupForm.value;
-    if( email && username && password ) {
-      this.authService.signup({ email, username, password }).subscribe((success) => {
-        this.loadingController
-          .create({ keyboardClose: true, message: 'Registering ...' })
-          .then(loadingEl => {
-            loadingEl.present();
-            setTimeout(() => {
-              loadingEl.dismiss();
-              this.toastController.create({
-                message: success ? 'Registration successful!' : 'Registration failed. Please try again.',
-                duration: 2000,
-                color: success ? 'success' : 'danger'
-              }).then(toastEl => {
-                toastEl.present();
-                if (success) {
-                  this.router.navigate(['/login']);
-                }
-              });
-            }, 1500);
-          });
-      });
+    if (email && username && password) {
+      this.authService
+        .signup({ email, username, password })
+        .subscribe((success) => {
+          this.loadingController
+            .create({ keyboardClose: true, message: 'Registering ...' })
+            .then((loadingEl) => {
+              loadingEl.present();
+              setTimeout(() => {
+                loadingEl.dismiss();
+                this.toastController
+                  .create({
+                    message: success
+                      ? 'Registration successful!'
+                      : 'Registration failed. Please try again.',
+                    duration: 2000,
+                    color: success ? 'success' : 'danger',
+                  })
+                  .then((toastEl) => {
+                    toastEl.present();
+                    if (success) {
+                      this.router.navigate(['/login']);
+                    }
+                  });
+              }, 1500);
+            });
+        });
     }
   }
-
 }

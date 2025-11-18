@@ -6,15 +6,20 @@ import {
   IonCardHeader,
   IonCardTitle,
   IonFooter,
-  IonIcon, IonToolbar, IonTitle } from '@ionic/angular/standalone';
-import { LoginFormComponent } from "./login-form/login-form.component";
+  IonIcon,
+  IonToolbar,
+  IonTitle,
+} from '@ionic/angular/standalone';
+import { LoginFormComponent } from './login-form/login-form.component';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [IonTitle, IonToolbar,
+  imports: [
+    IonTitle,
+    IonToolbar,
     IonIcon,
     IonFooter,
     IonCardTitle,
@@ -22,7 +27,8 @@ import { LoginFormComponent } from "./login-form/login-form.component";
     IonCard,
     IonContent,
     IonHeader,
-    LoginFormComponent],
+    LoginFormComponent,
+  ],
 })
 export class LoginPage implements OnInit {
   message: string | null = null;
@@ -32,7 +38,7 @@ export class LoginPage implements OnInit {
 
   ngOnInit() {}
 
-  onLoginStatus(response: {status: string, message: string}) {
+  onLoginStatus(response: { status: string; message: string }) {
     this.message = response.message;
     this.color = response.status === 'success' ? 'success' : 'danger';
     console.log('Login form submitted with values page:', response);

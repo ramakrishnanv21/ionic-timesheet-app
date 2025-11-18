@@ -12,7 +12,9 @@
           />
         </ion-item>
         @if(signupForm.controls.email.errors?.['emailTaken']) {
-          <ion-note color="danger" class="ion-padding">Email address already taken</ion-note>
+        <ion-note color="danger" class="ion-padding">
+          Email address already taken
+        </ion-note>
         }
       </ion-col>
     </ion-row>
@@ -27,7 +29,9 @@
           />
         </ion-item>
         @if(signupForm.controls.username.errors?.['usernameTaken']) {
-          <ion-note color="danger" class="ion-padding">Username already taken</ion-note>
+        <ion-note color="danger" class="ion-padding">
+          Username already taken
+        </ion-note>
         }
       </ion-col>
     </ion-row>
@@ -54,7 +58,9 @@
           />
         </ion-item>
         @if(signupForm.errors?.['passwordsMismatch']) {
-          <ion-note color="danger" class="ion-padding">Passwords does not match</ion-note>
+        <ion-note color="danger" class="ion-padding">
+          Passwords does not match
+        </ion-note>
         }
       </ion-col>
     </ion-row>

@@ -1,5 +1,5 @@
 import { Inject, inject, Injectable } from '@angular/core';
-import { Observable, of, tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { Role, SignupData, SignupResponse, UserResponse } from '../model/user';
 import { HttpClient } from '@angular/common/http';
 
@@ -8,22 +8,27 @@ import { HttpClient } from '@angular/common/http';
 })
 export class AuthService {
   private http = inject(HttpClient);
-  
+
   constructor(@Inject('API_URL') private apiUrl: string) {}
 
   isAuthenticated(): boolean {
-    const authToken =  localStorage.getItem('auth_token');
-    return authToken ? true : false
+    const authToken = localStorage.getItem('auth_token');
+    return authToken ? true : false;
   }
 
   login(username: string, password: string): Observable<UserResponse> {
-    return this.http.post<UserResponse>(`${this.apiUrl}/api/login`, {username, password}).
-      pipe(tap(response => response));
+    return this.http
+      .post<UserResponse>(`${this.apiUrl}/api/login`, { username, password })
+      .pipe(tap((response) => response));
   }
 
   signup(userData: SignupData): Observable<SignupResponse> {
-    return this.http.post<SignupResponse>(`${this.apiUrl}/api/users`, {...userData, role: Role.USER}).
-      pipe(tap(response => response));
+    return this.http
+      .post<SignupResponse>(`${this.apiUrl}/api/users`, {
+        ...userData,
+        role: Role.USER,
+      })
+      .pipe(tap((response) => response));
   }
 
   authenticated(id: string) {
