@@ -1,0 +1,49 @@
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <ion-grid>
+    <ion-row>
+      <ion-col size-md="4" offset-md="4" class="ion-text-center">
+        <ion-item>
+          <ion-input
+            [clearInput]="true"
+            type="text"
+            label="Username"
+            labelPlacement="floating"
+            formControlName="username"
+          ></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size-md="4" offset-md="4" class="ion-text-center">
+        <ion-item>
+          <ion-input
+            type="password"
+            [clearInput]="true"
+            label="Password"
+            labelPlacement="floating"
+            formControlName="password"
+          ></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size-md="4" offset-md="4" class="ion-text-center">
+        <ion-button type="submit" fill="solid" [disabled]="loginForm.invalid">
+          Login
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size-md="4" offset-md="4" class="ion-text-center">
+        <ion-button
+          expand="block"
+          fill="outline"
+          type="button"
+          routerLink="/signup"
+        >
+          Switch to Signup
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</form>

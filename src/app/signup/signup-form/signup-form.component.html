@@ -1,0 +1,77 @@
+<form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+  <ion-grid>
+    <ion-row>
+      <ion-col size-md="4" offset-md="4" class="ion-text-start">
+        <ion-item>
+          <ion-input
+            [clearInput]="true"
+            type="text"
+            label="Email Address"
+            labelPlacement="floating"
+            formControlName="email"
+          />
+        </ion-item>
+        @if(signupForm.controls.email.errors?.['emailTaken']) {
+          <ion-note color="danger" class="ion-padding">Email address already taken</ion-note>
+        }
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size-md="4" offset-md="4" class="ion-text-start">
+        <ion-item>
+          <ion-input
+            type="text"
+            label="Username"
+            labelPlacement="floating"
+            formControlName="username"
+          />
+        </ion-item>
+        @if(signupForm.controls.username.errors?.['usernameTaken']) {
+          <ion-note color="danger" class="ion-padding">Username already taken</ion-note>
+        }
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size-md="4" offset-md="4" class="ion-text-start">
+        <ion-item>
+          <ion-input
+            type="password"
+            label="Password"
+            labelPlacement="floating"
+            formControlName="password"
+          />
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size-md="4" offset-md="4" class="ion-text-start">
+        <ion-item>
+          <ion-input
+            type="password"
+            label="Confirm Password"
+            labelPlacement="floating"
+            formControlName="confirm_password"
+          />
+        </ion-item>
+        @if(signupForm.errors?.['passwordsMismatch']) {
+          <ion-note color="danger" class="ion-padding">Passwords does not match</ion-note>
+        }
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col size-md="4" offset-md="4" class="ion-text-center">
+        <ion-button type="submit" fill="solid" [disabled]="signupForm.invalid">
+          Signup
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size-md="4" offset-md="4" class="ion-text-center">
+        <ion-button expand="block" fill="outline" routerLink="/login">
+          Switch to Login
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</form>
