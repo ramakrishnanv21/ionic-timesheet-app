@@ -3,7 +3,10 @@ import { AuthService } from '../services/auth.service';
 import { inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
-export const authGuard: CanMatchFn = (route: Route, state: UrlSegment[]) : Observable<boolean> | Promise<boolean> | boolean => {
+export const authGuard: CanMatchFn = (
+  route: Route,
+  state: UrlSegment[]
+): Observable<boolean> | Promise<boolean> | boolean => {
   const authService = inject(AuthService);
   const router = inject(Router);
   if (!authService.isAuthenticated()) {

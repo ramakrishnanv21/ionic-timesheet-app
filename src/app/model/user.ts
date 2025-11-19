@@ -6,7 +6,7 @@ export interface User {
 
 export enum Role {
   ADMIN = 'admin',
-  USER = 'user'
+  USER = 'user',
 }
 
 export interface SignupData {
@@ -22,7 +22,7 @@ export interface SignupResponse {
 }
 
 export interface UserResponse {
-  status: 'success' | 'failed',
+  status: 'success' | 'failed';
   message: string;
-  user: User
+  token?: string;
 }

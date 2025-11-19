@@ -5,23 +5,31 @@ export const routes: Routes = [
   {
     path: '',
     redirectTo: 'dashboard',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: 'login',
-    loadComponent: () => import('./login/login.page').then( m => m.LoginPage)
+    loadComponent: () => import('./login/login.page').then((m) => m.LoginPage),
   },
   {
     path: 'dashboard',
-    loadComponent: () => import('./dashboard/dashboard.page').then( m => m.DashboardPage),
-    canMatch: [authGuard]
+    loadComponent: () =>
+      import('./dashboard/dashboard.page').then((m) => m.DashboardPage),
+    canMatch: [authGuard],
   },
   {
     path: 'signup',
-    loadComponent: () => import('./signup/signup.page').then( m => m.SignupPage)
+    loadComponent: () =>
+      import('./signup/signup.page').then((m) => m.SignupPage),
+  },
+  {
+    path: 'settings',
+    loadComponent: () =>
+      import('./settings/settings.page').then((m) => m.SettingsPage),
   },
   {
     path: '**',
-    loadComponent: () => import('./notfound/notfound.page').then( m => m.NotfoundPage)
+    loadComponent: () =>
+      import('./notfound/notfound.page').then((m) => m.NotfoundPage),
   },
 ];

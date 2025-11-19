@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, inject, Inject, OnInit } from '@angular/core';
 import {
   IonContent,
   IonHeader,
@@ -11,6 +11,8 @@ import {
   IonTitle,
 } from '@ionic/angular/standalone';
 import { LoginFormComponent } from './login-form/login-form.component';
+import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -31,7 +33,14 @@ import { LoginFormComponent } from './login-form/login-form.component';
   ],
 })
 export class LoginPage implements OnInit {
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
   constructor(@Inject('APP_NAME') public appName: string) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (this.authService.isAuthenticated()) {
+      this.router.navigateByUrl('/dashboard');
+    }
+  }
 }

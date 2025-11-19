@@ -55,8 +55,8 @@ export class LoginFormComponent implements OnInit {
         .login(username, password)
         .subscribe((response: UserResponse) => {
           console.log('response', response);
-          if (response.status === 'success') {
-            this.authService.authenticated(response.user._id);
+          if (response.status === 'success' && response?.token) {
+            this.authService.authenticated(response.token);
           }
           this.loadingController
             .create({ keyboardClose: true, message: 'Logging in...' })
