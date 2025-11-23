@@ -1,0 +1,65 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button color="medium" (click)="cancel()">Cancel</ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="confirm()" [strong]="true">Save</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-item lines="none">
+    <ion-label color="primary"><h2>Fill your timesheet</h2></ion-label>
+  </ion-item>
+  <ion-card>
+    <ion-card-content>
+      <form [formGroup]="entryForm" (ngSubmit)="onSubmit()">
+        <ion-grid>
+          <ion-row>
+            <ion-col size="12" class="ion-text-center">
+              <ion-item class="ion-no-padding">
+                <ion-input
+                  type="text"
+                  label="Start Time"
+                  labelPlacement="floating"
+                  (click)="togglePicker(time.START)"
+                  formControlName="startTime"
+                  [clearInput]="true"
+                ></ion-input>
+              </ion-item>
+              @if(showStartPicker) {
+              <app-date-time
+                [defaultValue]="startDefaultTime"
+                (togglePicker)="togglePicker(time.START)"
+                (onDateChange)="onDateChange($event, time.START)"
+              />
+              }
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col class="ion-text-center">
+              <ion-item class="ion-no-padding">
+                <ion-input
+                  type="text"
+                  label="End Time"
+                  labelPlacement="floating"
+                  formControlName="endTime"
+                  (click)="togglePicker(time.END)"
+                  [clearInput]="true"
+                ></ion-input>
+              </ion-item>
+              @if(showEndPicker) {
+              <app-date-time
+                [defaultValue]="endDefaultTime"
+                (togglePicker)="togglePicker(time.END)"
+                (onDateChange)="onDateChange($event, time.END)"
+              />
+              }
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

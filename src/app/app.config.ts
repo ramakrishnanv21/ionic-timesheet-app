@@ -11,7 +11,14 @@ import {
   provideIonicAngular,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { heart, home, logOutOutline, person } from 'ionicons/icons';
+import {
+  closeCircleOutline,
+  closeOutline,
+  heart,
+  home,
+  logOutOutline,
+  person,
+} from 'ionicons/icons';
 
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
@@ -22,6 +29,8 @@ addIcons({
   home,
   person,
   logOutOutline,
+  closeCircleOutline,
+  closeOutline,
 });
 
 const db_password = 'Rama@3214';

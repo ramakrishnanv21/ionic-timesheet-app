@@ -21,12 +21,18 @@ import {
   IonCol,
   IonButton,
   ToastController,
+  IonSegment,
+  IonSegmentButton,
+  IonSegmentContent,
+  IonSegmentView,
+  ModalController,
 } from '@ionic/angular/standalone';
 import { JwtService } from '../services/jwt.service';
 import { Router, RouterLink } from '@angular/router';
 import { TotalAmountComponent } from './total-amount/total-amount.component';
 import { WorkingHoursComponent } from './working-hours/working-hours.component';
 import { AuthService } from '../services/auth.service';
+import { AddEntryFormComponent } from './add-entry-form/add-entry-form.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -51,6 +57,10 @@ import { AuthService } from '../services/auth.service';
     IonGrid,
     IonCol,
     IonButton,
+    IonSegment,
+    IonSegmentButton,
+    IonSegmentContent,
+    IonSegmentView,
   ],
   providers: [JwtService, AuthService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -59,6 +69,8 @@ export class DashboardPage implements OnInit {
   private jwtService = inject(JwtService);
   private authService = inject(AuthService);
   private toastController = inject(ToastController);
+  private modalCtrl = inject(ModalController);
+
   private router = inject(Router);
   username = signal<string | null>(null);
   constructor() {}
@@ -79,5 +91,15 @@ export class DashboardPage implements OnInit {
         toastEl.present();
         this.router.navigateByUrl('/login');
       });
+  }
+
+  async openEntryForm() {
+    const modal = await this.modalCtrl.create({
+      component: AddEntryFormComponent,
+    });
+    modal.present();
+
+    const response = await modal.onWillDismiss();
+    console.log('response', response);
   }
 }
