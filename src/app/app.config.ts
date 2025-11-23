@@ -22,7 +22,7 @@ import {
 
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { jwtInterceptor } from './interceptors/jwt.interceptor';
+
 
 addIcons({
   heart,
@@ -35,11 +35,13 @@ addIcons({
 
 const db_password = 'Rama@3214';
 
+import { authInterceptor } from './interceptors/auth-interceptor';
+
 export const appConfig: ApplicationConfig = {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideIonicAngular(),
-    provideHttpClient(withInterceptors([jwtInterceptor])),
+    provideHttpClient(withInterceptors([authInterceptor])),
     provideRouter(
       routes,
       withPreloading(PreloadAllModules),

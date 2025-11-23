@@ -32,44 +32,25 @@
       </ion-label>
     </ion-item>
 
-    <ion-segment value="overview" color="danger">
-      <ion-segment-button value="overview" content-id="overview">
+    <ion-segment
+      [value]="currentTab()"
+      (ionChange)="onSegmentChange($event)"
+      color="danger"
+    >
+      <ion-segment-button value="overview">
         <ion-label>Overview</ion-label>
       </ion-segment-button>
-      <ion-segment-button value="timesheet" content-id="timesheet">
+      <ion-segment-button value="timesheet">
         <ion-label>Timesheet</ion-label>
       </ion-segment-button>
     </ion-segment>
 
-    <ion-segment-view>
-      <ion-segment-content id="overview">
-        <ion-grid>
-          <ion-row>
-            <ion-col size="6">
-              <app-total-amount amount="900.456" />
-            </ion-col>
-            <ion-col size="6">
-              <app-working-hours hours="45" />
-            </ion-col>
-          </ion-row>
-
-          <ion-row>
-            <ion-col class="ion-text-center">
-              <ion-button expand="block" (click)="openEntryForm()"
-                >Add Working Hours</ion-button
-              >
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </ion-segment-content>
-
-      <ion-segment-content id="timesheet">
-        <ion-grid>
-          <ion-row>
-            <ion-col> Timesheet content will appear here </ion-col>
-          </ion-row>
-        </ion-grid>
-      </ion-segment-content>
-    </ion-segment-view>
+    <div class="ion-padding">
+      @if (currentTab() === 'overview') {
+      <app-overview />
+      } @else {
+      <app-timesheet />
+      }
+    </div>
   </ion-content>
 </div>

@@ -17,22 +17,16 @@ import {
   IonMenuButton,
   IonItem,
   IonLabel,
-  IonGrid,
-  IonCol,
   IonButton,
   ToastController,
   IonSegment,
   IonSegmentButton,
-  IonSegmentContent,
-  IonSegmentView,
-  ModalController,
 } from '@ionic/angular/standalone';
 import { JwtService } from '../services/jwt.service';
 import { Router, RouterLink } from '@angular/router';
-import { TotalAmountComponent } from './total-amount/total-amount.component';
-import { WorkingHoursComponent } from './working-hours/working-hours.component';
+import { OverviewComponent } from './overview/overview.component';
+import { TimesheetComponent } from './timesheet/timesheet.component';
 import { AuthService } from '../services/auth.service';
-import { AddEntryFormComponent } from './add-entry-form/add-entry-form.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -52,24 +46,19 @@ import { AddEntryFormComponent } from './add-entry-form/add-entry-form.component
     IonMenu,
     IonMenuButton,
     RouterLink,
-    TotalAmountComponent,
-    WorkingHoursComponent,
-    IonGrid,
-    IonCol,
+    RouterLink,
     IonButton,
     IonSegment,
     IonSegmentButton,
-    IonSegmentContent,
-    IonSegmentView,
+    OverviewComponent,
+    TimesheetComponent,
   ],
-  providers: [JwtService, AuthService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class DashboardPage implements OnInit {
   private jwtService = inject(JwtService);
   private authService = inject(AuthService);
   private toastController = inject(ToastController);
-  private modalCtrl = inject(ModalController);
 
   private router = inject(Router);
   username = signal<string | null>(null);
@@ -93,13 +82,9 @@ export class DashboardPage implements OnInit {
       });
   }
 
-  async openEntryForm() {
-    const modal = await this.modalCtrl.create({
-      component: AddEntryFormComponent,
-    });
-    modal.present();
+  currentTab = signal<string>('overview');
 
-    const response = await modal.onWillDismiss();
-    console.log('response', response);
+  onSegmentChange(event: any) {
+    this.currentTab.set(event.detail.value);
   }
 }

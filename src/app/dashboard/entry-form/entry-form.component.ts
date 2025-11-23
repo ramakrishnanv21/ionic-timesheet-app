@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import {
   Component,
   OnInit,
@@ -14,6 +15,7 @@ import {
   FormGroup,
 } from '@angular/forms';
 import {
+  IonNote,
   IonButton,
   IonCol,
   IonGrid,
@@ -40,10 +42,11 @@ enum Time {
 }
 
 @Component({
-  selector: 'app-add-entry-form',
-  templateUrl: './add-entry-form.component.html',
-  styleUrls: ['./add-entry-form.component.scss'],
+  selector: 'app-entry-form',
+  templateUrl: './entry-form.component.html',
+  styleUrls: ['./entry-form.component.scss'],
   imports: [
+    IonNote,
     IonLabel,
     IonContent,
     IonButtons,
@@ -62,9 +65,10 @@ enum Time {
     IonDatetime,
     IonDatetimeButton,
     IonModal,
+    DatePipe,
   ],
 })
-export class AddEntryFormComponent implements OnInit {
+export class EntryFormComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly modalCtrl = inject(ModalController);
 
@@ -83,10 +87,10 @@ export class AddEntryFormComponent implements OnInit {
   }
 
   private readonly startDefaultTimeSignal = signal<string>(
-    AddEntryFormComponent.computeDefaultTime()
+    EntryFormComponent.computeDefaultTime()
   );
   private readonly endDefaultTimeSignal = signal<string>(
-    AddEntryFormComponent.computeDefaultTime(2)
+    EntryFormComponent.computeDefaultTime(2)
   );
 
   get startDefaultTime(): string {
@@ -114,11 +118,6 @@ export class AddEntryFormComponent implements OnInit {
 
     let diff = endDate.getTime() - startDate.getTime();
     if (diff < 0) {
-      // Handle overnight shifts or invalid ranges if necessary
-      // For now, assuming same day, so if end < start, it might be invalid or next day.
-      // Let's treat it as next day if end < start? Or just return 00:00?
-      // The requirement says "on this date", implying single day.
-      // Let's just return 00:00 if negative for now to be safe, or maybe it's a mistake.
       return '00:00';
     }
 
@@ -145,10 +144,6 @@ export class AddEntryFormComponent implements OnInit {
     return new Date().toISOString();
   }
 
-  onSubmit() {
-    console.log(this.entryForm.value);
-  }
-
   cancel() {
     return this.modalCtrl.dismiss(null, 'cancel');
   }
@@ -164,7 +159,14 @@ export class AddEntryFormComponent implements OnInit {
   }
 
   confirm() {
-    return this.modalCtrl.dismiss(this.entryForm.value, 'confirm');
+    const formValue = this.entryForm.value;
+    const workDate = formValue.workDate;
+    const dateOnly = workDate.split('T')[0];
+    const payload = {
+      ...formValue,
+      workDate: dateOnly,
+    };
+    return this.modalCtrl.dismiss(payload, 'confirm');
   }
 
   onDateChange(time: string, field: Time) {

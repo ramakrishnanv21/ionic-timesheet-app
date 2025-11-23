@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class JwtService {
   getDecodedToken(token: string) {
     try {
@@ -17,5 +19,9 @@ export class JwtService {
 
     const decoded: { name: string } = this.getDecodedToken(token);
     return decoded?.name || null;
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('auth_token');
   }
 }
