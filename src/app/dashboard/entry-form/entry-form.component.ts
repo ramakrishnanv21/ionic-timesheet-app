@@ -7,6 +7,7 @@ import {
   signal,
   inject,
   computed,
+  input,
 } from '@angular/core';
 import {
   FormBuilder,
@@ -35,6 +36,7 @@ import {
   IonDatetimeButton,
 } from '@ionic/angular/standalone';
 import { DateTimeComponent } from 'src/app/shared/date-time/date-time.component';
+import { Timesheet } from '../../model/Timesheet';
 
 enum Time {
   START = 'startTime',
@@ -73,6 +75,9 @@ export class EntryFormComponent implements OnInit {
   private readonly modalCtrl = inject(ModalController);
 
   @ViewChild('dateModal') dateModal?: IonModal;
+
+  // Input for editing existing timesheet
+  timesheetData = input<Timesheet | null>(null);
 
   time = Time;
   showStartPicker = false;
@@ -130,14 +135,33 @@ export class EntryFormComponent implements OnInit {
 
   entryForm!: FormGroup;
 
-  constructor() {}
+  constructor() { }
 
   ngOnInit() {
-    this.entryForm = this.fb.group({
-      workDate: [this.getTodayDate(), Validators.required],
-      startTime: [this.startDefaultTime, Validators.required],
-      endTime: [this.endDefaultTime, Validators.required],
-    });
+    const existingData = this.timesheetData();
+
+    if (existingData) {
+      // Editing mode - populate with existing data
+      const workDate = existingData.workDate.includes('T')
+        ? existingData.workDate
+        : new Date(existingData.workDate).toISOString();
+
+      this.startDefaultTimeSignal.set(existingData.startTime);
+      this.endDefaultTimeSignal.set(existingData.endTime);
+
+      this.entryForm = this.fb.group({
+        workDate: [workDate, Validators.required],
+        startTime: [existingData.startTime, Validators.required],
+        endTime: [existingData.endTime, Validators.required],
+      });
+    } else {
+      // New entry mode - use defaults
+      this.entryForm = this.fb.group({
+        workDate: [this.getTodayDate(), Validators.required],
+        startTime: [this.startDefaultTime, Validators.required],
+        endTime: [this.endDefaultTime, Validators.required],
+      });
+    }
   }
 
   private getTodayDate(): string {
@@ -165,6 +189,7 @@ export class EntryFormComponent implements OnInit {
     const payload = {
       ...formValue,
       workDate: dateOnly,
+      _id: this.timesheetData()?._id, // Include _id if editing
     };
     return this.modalCtrl.dismiss(payload, 'confirm');
   }

@@ -4,3 +4,8 @@ export interface Timesheet {
   startTime: string;
   endTime: string;
 }
+
+export interface TimesheetResponse {
+  status: 'success' | 'failed';
+  message: string;
+}
