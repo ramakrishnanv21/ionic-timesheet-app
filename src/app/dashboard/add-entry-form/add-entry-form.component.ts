@@ -5,6 +5,7 @@ import {
   CUSTOM_ELEMENTS_SCHEMA,
   signal,
   inject,
+  computed,
 } from '@angular/core';
 import {
   FormBuilder,
@@ -28,6 +29,8 @@ import {
   IonCard,
   IonCardContent,
   IonModal,
+  IonDatetime,
+  IonDatetimeButton,
 } from '@ionic/angular/standalone';
 import { DateTimeComponent } from 'src/app/shared/date-time/date-time.component';
 
@@ -56,6 +59,9 @@ enum Time {
     IonCard,
     IonCardContent,
     DateTimeComponent,
+    IonDatetime,
+    IonDatetimeButton,
+    IonModal,
   ],
 })
 export class AddEntryFormComponent implements OnInit {
@@ -91,15 +97,52 @@ export class AddEntryFormComponent implements OnInit {
     return this.endDefaultTimeSignal();
   }
 
+  readonly duration = computed(() => {
+    const start = this.startDefaultTimeSignal();
+    const end = this.endDefaultTimeSignal();
+    return this.calculateDuration(start, end);
+  });
+
+  private calculateDuration(start: string, end: string): string {
+    if (!start || !end) return '';
+
+    const [startHours, startMinutes] = start.split(':').map(Number);
+    const [endHours, endMinutes] = end.split(':').map(Number);
+
+    const startDate = new Date(0, 0, 0, startHours, startMinutes);
+    const endDate = new Date(0, 0, 0, endHours, endMinutes);
+
+    let diff = endDate.getTime() - startDate.getTime();
+    if (diff < 0) {
+      // Handle overnight shifts or invalid ranges if necessary
+      // For now, assuming same day, so if end < start, it might be invalid or next day.
+      // Let's treat it as next day if end < start? Or just return 00:00?
+      // The requirement says "on this date", implying single day.
+      // Let's just return 00:00 if negative for now to be safe, or maybe it's a mistake.
+      return '00:00';
+    }
+
+    const hours = Math.floor(diff / 1000 / 60 / 60);
+    diff -= hours * 1000 * 60 * 60;
+    const minutes = Math.floor(diff / 1000 / 60);
+
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+  }
+
   entryForm!: FormGroup;
 
   constructor() {}
 
   ngOnInit() {
     this.entryForm = this.fb.group({
+      workDate: [this.getTodayDate(), Validators.required],
       startTime: [this.startDefaultTime, Validators.required],
       endTime: [this.endDefaultTime, Validators.required],
     });
+  }
+
+  private getTodayDate(): string {
+    return new Date().toISOString();
   }
 
   onSubmit() {

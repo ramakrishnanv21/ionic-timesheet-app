@@ -1,7 +1,4 @@
-<ion-card class="ion-no-padding ion-text-end">
-  <ion-button color="danger" class="close-btn" (click)="onClose()">
-    <ion-icon name="close-outline"></ion-icon>
-  </ion-button>
+<ion-card class="ion-no-padding">
   <ion-datetime
     [preferWheel]="true"
     locale="es-ES"
@@ -11,6 +8,8 @@
     [formatOptions]="{
       time: { hour: '2-digit', minute: '2-digit' },
     }"
+    [showDefaultButtons]="true"
+    (ionCancel)="onClose()"
     (ionChange)="onChangeDate($event)"
   ></ion-datetime>
 </ion-card>
