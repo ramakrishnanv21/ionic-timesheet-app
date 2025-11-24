@@ -1,3 +1,23 @@
 .logout-icon {
-    font-size: 30px;
+  font-size: 30px;
+}
+
+h2 {
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+ion-segment {
+  background-color: white;
+  border-radius: 20px;
+
+  ion-segment-button {
+    color: var(--ion-color-secondary);
+    font-weight: 600;
+    &.segment-button-checked {
+      --color: var(--ion-color-tertiary);
+    }
+  }
 }

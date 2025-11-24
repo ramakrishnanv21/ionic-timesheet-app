@@ -1,3 +1,7 @@
+<ion-card class="ion-no-padding">
+	<app-month-filter [selectedMonth]="selectedMonth()" (monthChange)="onMonthChange($event)"></app-month-filter>
+</ion-card>
+
 @if (loading()) {
 <div class="ion-text-center">
 	<ion-spinner></ion-spinner>
@@ -9,23 +13,40 @@
 </div>
 } @else if (timesheets().length === 0) {
 <div class="ion-text-center">
-	<p>No timesheets found. Start by adding your working hours!</p>
+	<p>No timesheets found for this month.</p>
 </div>
 } @else {
 <ion-list class="ion-no-padding">
-	@for (timesheet of timesheets(); track $index) {
-	<ion-card class="ion-padding">
+	@for (timesheet of timesheets(); track timesheet._id) {
+	<ion-card class="ion-no-padding timesheet-card">
 		<ion-item-sliding>
-			<ion-item lines="none" class="ion-no-padding list-item">
-				<h6>{{ timesheet.workDate | date:'fullDate' }}</h6>
-				<p>{{ timesheet.startTime }} - {{ timesheet.endTime }}</p>
+			<ion-item-options side="start">
+				<ion-item-option color="primary" expandable="true" (click)="editTimesheet(timesheet)">
+					<ion-icon slot="icon-only" name="create-outline"></ion-icon>
+				</ion-item-option>
+			</ion-item-options>
 
+			<ion-item lines="none">
+				<ion-label>
+					<div class="ion-text-wrap">
+						<h6 class="ion-no-margin">{{ timesheet.workDate | date:'fullDate' }}</h6>
+						<p class="ion-no-margin">{{ timesheet.startTime }} - {{ timesheet.endTime }}</p>
+					</div>
+				</ion-label>
+				<ion-note slot="end" color="primary" class="ion-no-margin duration">
+					@if (calculateDuration(timesheet.startTime, timesheet.endTime).hours !== '00') {
+					<span>{{ calculateDuration(timesheet.startTime,
+						timesheet.endTime).hours
+						}}
+						hours</span>
+					}
+					@if (calculateDuration(timesheet.startTime, timesheet.endTime).minutes !== '00') {
+					<span>{{ calculateDuration(timesheet.startTime, timesheet.endTime).minutes }} mins</span>
+					}
+				</ion-note>
 			</ion-item>
 
 			<ion-item-options side="end">
-				<ion-item-option color="primary" (click)="editTimesheet(timesheet)">
-					<ion-icon slot="icon-only" name="create-outline"></ion-icon>
-				</ion-item-option>
 				<ion-item-option color="danger" (click)="deleteTimesheet(timesheet)">
 					<ion-icon slot="icon-only" name="trash-outline"></ion-icon>
 				</ion-item-option>

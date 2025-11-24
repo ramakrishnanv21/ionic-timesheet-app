@@ -1,5 +1,6 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import {
+	IonLabel,
 	IonList,
 	IonItem,
 	IonNote,
@@ -18,6 +19,7 @@ import { DatePipe } from '@angular/common';
 import { EntryFormComponent } from '../entry-form/entry-form.component';
 import { addIcons } from 'ionicons';
 import { createOutline, trashOutline } from 'ionicons/icons';
+import { MonthFilterComponent } from './month-filter/month-filter.component';
 
 @Component({
 	selector: 'app-timesheet',
@@ -25,6 +27,7 @@ import { createOutline, trashOutline } from 'ionicons/icons';
 	styleUrls: ['./timesheet.component.scss'],
 	standalone: true,
 	imports: [
+		IonLabel,
 		IonList,
 		IonItem,
 		IonNote,
@@ -35,6 +38,7 @@ import { createOutline, trashOutline } from 'ionicons/icons';
 		IonIcon,
 		IonCard,
 		DatePipe,
+		MonthFilterComponent
 	]
 })
 export class TimesheetComponent implements OnInit {
@@ -45,6 +49,7 @@ export class TimesheetComponent implements OnInit {
 	timesheets = signal<Timesheet[]>([]);
 	loading = signal<boolean>(false);
 	error = signal<string | null>(null);
+	selectedMonth = signal<string>(new Date().toISOString());
 
 	constructor() {
 		addIcons({ createOutline, trashOutline });
@@ -58,12 +63,19 @@ export class TimesheetComponent implements OnInit {
 	loadTimesheets() {
 		this.loading.set(true);
 		this.error.set(null);
-		console.log('Fetching timesheets from API...');
 
-		this.timesheetService.listTimesheets().subscribe({
+		const selectedDate = new Date(this.selectedMonth());
+		const year = selectedDate.getFullYear();
+		const month = selectedDate.getMonth() + 1; // API expects 1-based month
+
+		console.log(`Fetching timesheets for ${year}-${month}...`);
+
+		this.timesheetService.listTimesheets(year, month).subscribe({
 			next: (data) => {
 				console.log('Timesheets received:', data);
-				this.timesheets.set(data);
+				// Sort by date descending
+				const sortedData = data.sort((a, b) => new Date(b.workDate).getTime() - new Date(a.workDate).getTime());
+				this.timesheets.set(sortedData);
 				this.loading.set(false);
 			},
 			error: (err) => {
@@ -72,6 +84,11 @@ export class TimesheetComponent implements OnInit {
 				this.loading.set(false);
 			},
 		});
+	}
+
+	onMonthChange(month: string) {
+		this.selectedMonth.set(month);
+		this.loadTimesheets();
 	}
 
 	async editTimesheet(timesheet: Timesheet) {
@@ -103,14 +120,39 @@ export class TimesheetComponent implements OnInit {
 					text: 'Delete',
 					role: 'destructive',
 					handler: () => {
-						// TODO: Call delete API
-						console.log('Delete timesheet:', timesheet);
-						this.loadTimesheets();
+						this.timesheetService.deleteTimesheet(timesheet._id!).subscribe({
+							next: () => {
+								console.log('Deleted timesheet:', timesheet);
+								this.loadTimesheets();
+							},
+							error: (err) => {
+								console.error('Failed to delete timesheet', err);
+								// Optionally show an error toast/alert
+							}
+						});
 					},
 				},
 			],
 		});
 
 		await alert.present();
+	}
+	calculateDuration(startTime: string, endTime: string): { hours: string, minutes: string } {
+		const start = new Date(`2000-01-01T${startTime}`);
+		const end = new Date(`2000-01-01T${endTime}`);
+		let diff = end.getTime() - start.getTime();
+
+		if (diff < 0) {
+			// Handle overnight shifts if necessary, or assume same day
+			diff += 24 * 60 * 60 * 1000;
+		}
+
+		const hours = Math.floor(diff / (1000 * 60 * 60));
+		const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+		const hoursStr = hours.toString().padStart(2, '0');
+		const minutesStr = minutes.toString().padStart(2, '0');
+
+		return { hours: hoursStr, minutes: minutesStr };
 	}
 }

@@ -32,25 +32,17 @@
       </ion-label>
     </ion-item>
 
-    <ion-segment
-      [value]="currentTab()"
-      (ionChange)="onSegmentChange($event)"
-      color="danger"
-    >
-      <ion-segment-button value="overview">
+    <ion-segment color="tertiary" [value]="activeTab">
+      <ion-segment-button value="overview" [routerLink]="['overview']">
         <ion-label>Overview</ion-label>
       </ion-segment-button>
-      <ion-segment-button value="timesheet">
+      <ion-segment-button value="timesheet" [routerLink]="['timesheet']">
         <ion-label>Timesheet</ion-label>
       </ion-segment-button>
     </ion-segment>
 
-    <div>
-      @if (currentTab() === 'overview') {
-      <app-overview />
-      } @else {
-      <app-timesheet />
-      }
+    <div style="margin-top: 20px;">
+      <router-outlet></router-outlet>
     </div>
   </ion-content>
 </div>

@@ -16,6 +16,23 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./dashboard/dashboard.page').then((m) => m.DashboardPage),
     canMatch: [authGuard],
+    children: [
+      {
+        path: '',
+        redirectTo: 'overview',
+        pathMatch: 'full',
+      },
+      {
+        path: 'overview',
+        loadComponent: () =>
+          import('./dashboard/overview/overview.component').then((m) => m.OverviewComponent),
+      },
+      {
+        path: 'timesheet',
+        loadComponent: () =>
+          import('./dashboard/timesheet/timesheet.component').then((m) => m.TimesheetComponent),
+      },
+    ],
   },
   {
     path: 'signup',

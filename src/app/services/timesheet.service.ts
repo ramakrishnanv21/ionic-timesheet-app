@@ -19,8 +19,9 @@ export class TimesheetService {
         return this.http.put<Timesheet>(`${this.apiUrl}/api/timesheets`, timesheet);
     }
 
-    listTimesheets(): Observable<Timesheet[]> {
-        return this.http.get<Timesheet[]>(`${this.apiUrl}/api/timesheets`);
+    listTimesheets(year: number, month: number): Observable<Timesheet[]> {
+        const params = { year: year.toString(), month: month.toString() };
+        return this.http.get<Timesheet[]>(`${this.apiUrl}/api/timesheets`, { params });
     }
 
     deleteTimesheet(timesheetId: string): Observable<void> {

@@ -4,6 +4,7 @@ import {
   inject,
   OnInit,
   signal,
+  effect,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -23,10 +24,9 @@ import {
   IonSegmentButton,
 } from '@ionic/angular/standalone';
 import { JwtService } from '../services/jwt.service';
-import { Router, RouterLink } from '@angular/router';
-import { OverviewComponent } from './overview/overview.component';
-import { TimesheetComponent } from './timesheet/timesheet.component';
+import { Router, RouterLink, RouterOutlet, NavigationEnd } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -46,12 +46,10 @@ import { AuthService } from '../services/auth.service';
     IonMenu,
     IonMenuButton,
     RouterLink,
-    RouterLink,
+    RouterOutlet,
     IonButton,
     IonSegment,
     IonSegmentButton,
-    OverviewComponent,
-    TimesheetComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
@@ -62,10 +60,31 @@ export class DashboardPage implements OnInit {
 
   private router = inject(Router);
   username = signal<string | null>(null);
-  constructor() {}
+  activeTab = 'overview';
+
+  constructor() {
+    // Subscribe to router events to update active tab
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      const url = this.router.url;
+      if (url.includes('/timesheet')) {
+        this.activeTab = 'timesheet';
+      } else {
+        this.activeTab = 'overview';
+      }
+    });
+  }
 
   ngOnInit() {
     this.username.set(this.jwtService.getUsernameFromToken());
+    // Set initial active tab based on current route
+    const url = this.router.url;
+    if (url.includes('/timesheet')) {
+      this.activeTab = 'timesheet';
+    } else {
+      this.activeTab = 'overview';
+    }
   }
 
   onLogout() {
@@ -80,11 +99,5 @@ export class DashboardPage implements OnInit {
         toastEl.present();
         this.router.navigateByUrl('/login');
       });
-  }
-
-  currentTab = signal<string>('overview');
-
-  onSegmentChange(event: any) {
-    this.currentTab.set(event.detail.value);
   }
 }
