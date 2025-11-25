@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, input, OnInit } from '@angular/core';
 import {
   IonCard,
@@ -18,11 +19,13 @@ import {
     IonCardSubtitle,
     IonCardTitle,
     IonCard,
-    IonCardHeader
+    IonCardHeader,
+    DatePipe
   ],
 })
 export class WorkingHoursComponent implements OnInit {
   hours = input.required<string>();
+  month = input<string>('');
   constructor() { }
 
   ngOnInit() { }

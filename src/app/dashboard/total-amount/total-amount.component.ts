@@ -1,4 +1,4 @@
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, input, OnInit } from '@angular/core';
 import {
   IonCard,
@@ -21,11 +21,13 @@ import {
     IonCardTitle,
     IonCardHeader,
     IonCard,
+    DatePipe
   ],
 })
 export class TotalAmountComponent implements OnInit {
   amount = input.required<string>();
-  constructor() {}
+  month = input<string>('');
+  constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 }

@@ -7,12 +7,15 @@ import {
   ModalController,
   LoadingController,
   ToastController,
+  IonCard,
 } from '@ionic/angular/standalone';
 import { TotalAmountComponent } from '../total-amount/total-amount.component';
 import { WorkingHoursComponent } from '../working-hours/working-hours.component';
 import { EntryFormComponent } from '../entry-form/entry-form.component';
 import { TimesheetService } from '../../services/timesheet.service';
 import { TimesheetResponse, TotalHoursResponse } from '../../model/Timesheet';
+
+import { MonthFilterComponent } from '../timesheet/month-filter/month-filter.component';
 
 @Component({
   selector: 'app-overview',
@@ -25,6 +28,8 @@ import { TimesheetResponse, TotalHoursResponse } from '../../model/Timesheet';
     IonButton,
     TotalAmountComponent,
     WorkingHoursComponent,
+    MonthFilterComponent,
+    IonCard,
   ],
 })
 export class OverviewComponent implements OnInit {
@@ -32,16 +37,28 @@ export class OverviewComponent implements OnInit {
   private timesheetService = inject(TimesheetService);
   private loadingController = inject(LoadingController);
   private toastController = inject(ToastController);
+
   totalHours = signal<string>('');
+  selectedMonth = signal<string>(new Date().toISOString());
 
   ngOnInit() {
-    this.timesheetService.getTotalHours(new Date().getFullYear(), new Date().getMonth() + 1).subscribe((response: TotalHoursResponse) => {
+    this.loadTotalHours();
+  }
+
+  loadTotalHours() {
+    const date = new Date(this.selectedMonth());
+    this.timesheetService.getTotalHours(date.getFullYear(), date.getMonth() + 1).subscribe((response: TotalHoursResponse) => {
       const totalHours = response.data.totalHours;
       const hours = Math.floor(totalHours);
       const minutes = Math.round((totalHours - hours) * 60);
       const formattedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
       this.totalHours.set(`${hours} hours ${formattedMinutes} mins`);
     });
+  }
+
+  onMonthChange(month: string) {
+    this.selectedMonth.set(month);
+    this.loadTotalHours();
   }
 
   async openEntryForm() {
