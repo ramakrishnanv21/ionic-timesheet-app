@@ -15,8 +15,8 @@ export class TimesheetService {
         return this.http.post<TimesheetResponse>(`${this.apiUrl}/api/timesheets`, timesheet);
     }
 
-    updateTimesheet(timesheet: Timesheet): Observable<Timesheet> {
-        return this.http.put<Timesheet>(`${this.apiUrl}/api/timesheets`, timesheet);
+    updateTimesheet(timesheet: Timesheet): Observable<TimesheetResponse> {
+        return this.http.put<TimesheetResponse>(`${this.apiUrl}/api/timesheets`, timesheet);
     }
 
     listTimesheets(year: number, month: number): Observable<TimesheetResponse> {

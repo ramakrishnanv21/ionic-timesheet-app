@@ -15,7 +15,7 @@ import { EntryFormComponent } from '../entry-form/entry-form.component';
 import { TimesheetService } from '../../services/timesheet.service';
 import { TimesheetResponse, TotalHoursResponse } from '../../model/Timesheet';
 
-import { MonthFilterComponent } from '../timesheet/month-filter/month-filter.component';
+import { MonthFilterComponent } from '../../shared/month-filter/month-filter.component';
 
 @Component({
   selector: 'app-overview',
@@ -88,6 +88,7 @@ export class OverviewComponent implements OnInit {
           await toastEl.present();
           // Assuming TimesheetResponse includes a 'status' to confirm success from the backend
           if (res.status === 'success') {
+            this.loadTotalHours();
             // If `this.router` is used, ensure it's injected: private router = inject(Router);
             // this.router.navigate(['/dashboard']);
           }

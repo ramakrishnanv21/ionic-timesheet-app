@@ -12,6 +12,8 @@ import {
 	IonCard,
 	ModalController,
 	AlertController,
+	LoadingController,
+	ToastController,
 } from '@ionic/angular/standalone';
 import { TimesheetService } from '../../services/timesheet.service';
 import { Timesheet, TimesheetResponse } from '../../model/Timesheet';
@@ -19,7 +21,8 @@ import { DatePipe } from '@angular/common';
 import { EntryFormComponent } from '../entry-form/entry-form.component';
 import { addIcons } from 'ionicons';
 import { createOutline, trashOutline } from 'ionicons/icons';
-import { MonthFilterComponent } from './month-filter/month-filter.component';
+import { MonthFilterComponent } from '../../shared/month-filter/month-filter.component';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-timesheet',
@@ -45,7 +48,9 @@ export class TimesheetComponent implements OnInit {
 	private timesheetService = inject(TimesheetService);
 	private modalCtrl = inject(ModalController);
 	private alertCtrl = inject(AlertController);
-
+	private router = inject(Router);
+	private loadingController = inject(LoadingController);
+	private toastController = inject(ToastController);
 	timesheets = signal<Timesheet[]>([]);
 	loading = signal<boolean>(false);
 	error = signal<string | null>(null);
@@ -102,8 +107,35 @@ export class TimesheetComponent implements OnInit {
 
 		const response = await modal.onWillDismiss();
 		if (response.role === 'confirm') {
-			// Reload timesheets to see updates
-			this.loadTimesheets();
+			const loadingEl = await this.loadingController.create({
+				keyboardClose: true,
+				message: 'Updating timesheet...',
+			});
+			await loadingEl.present();
+
+			this.timesheetService.updateTimesheet(response.data).subscribe({
+				next: async (res: TimesheetResponse) => {
+					await loadingEl.dismiss();
+					const toastEl = await this.toastController.create({
+						message: res.message || 'Timesheet updae successfully.',
+						duration: 2000,
+						color: 'success',
+					});
+					await toastEl.present();
+					if (res.status === 'success') {
+						this.router.navigate(['/dashboard']);
+					}
+				},
+				error: async (err) => {
+					await loadingEl.dismiss();
+					const toastEl = await this.toastController.create({
+						message: err.error?.message || 'Failed to update timesheet. Please try again.',
+						duration: 2000,
+						color: 'danger',
+					});
+					await toastEl.present();
+				},
+			});
 		}
 	}
 

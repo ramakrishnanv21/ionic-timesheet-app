@@ -4,31 +4,29 @@
       <ion-button color="danger" (click)="cancel()">Cancel</ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-button color="primary"  (click)="confirm()" [strong]="true">Save</ion-button>
+      <ion-button color="primary" (click)="confirm()" [strong]="true">{{formButtonName()}}</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 <ion-content>
   <form [formGroup]="entryForm">
-  <ion-item lines="none" class="ion-text-center">
-    <ion-label color="primary"><h2> Fill your timesheet </h2></ion-label>
-  </ion-item>
-  <ion-card>
-    <ion-card-content>
+    <ion-item lines="none" class="ion-text-center">
+      <ion-label color="primary">
+        <h2> Fill your timesheet </h2>
+      </ion-label>
+    </ion-item>
+    <ion-card>
+      <ion-card-content>
         <ion-grid>
           <ion-row>
             <ion-col size="12" class="ion-text-center">
               <ion-item class="ion-no-padding">
                 <ion-label>Work Date</ion-label>
-                <ion-datetime-button slot="end" datetime="datetime"></ion-datetime-button>
+                <ion-datetime-button slot="end" datetime="entryFormDate"></ion-datetime-button>
                 <ion-modal [keepContentsMounted]="true">
                   <ng-template>
-                    <ion-datetime
-                      id="datetime"
-                      presentation="date"
-                      formControlName="workDate"
-                      [showDefaultButtons]="true"
-                    ></ion-datetime>
+                    <ion-datetime id="entryFormDate" presentation="date" formControlName="workDate"
+                      [showDefaultButtons]="true"></ion-datetime>
                   </ng-template>
                 </ion-modal>
               </ion-item>
@@ -37,56 +35,39 @@
           <ion-row>
             <ion-col size="12" class="ion-text-center">
               <ion-item class="ion-no-padding">
-                <ion-input
-                  type="text"
-                  label="Start Time"
-                  labelPlacement="floating"
-                  (click)="togglePicker(time.START)"
-                  formControlName="startTime"
-                  [clearInput]="true"
-                ></ion-input>
+                <ion-input type="text" label="Start Time" labelPlacement="floating" (click)="togglePicker(time.START)"
+                  formControlName="startTime" [clearInput]="true"></ion-input>
               </ion-item>
               @if(showStartPicker) {
-              <app-date-time
-                [defaultValue]="startDefaultTime"
-                (togglePicker)="togglePicker(time.START)"
-                (onDateChange)="onDateChange($event, time.START)"
-              />
+              <app-date-time [defaultValue]="startDefaultTime" (togglePicker)="togglePicker(time.START)"
+                (onDateChange)="onDateChange($event, time.START)" />
               }
             </ion-col>
           </ion-row>
           <ion-row>
             <ion-col class="ion-text-center">
               <ion-item class="ion-no-padding">
-                <ion-input
-                  type="text"
-                  label="End Time"
-                  labelPlacement="floating"
-                  formControlName="endTime"
-                  (click)="togglePicker(time.END)"
-                  [clearInput]="true"
-                ></ion-input>
+                <ion-input type="text" label="End Time" labelPlacement="floating" formControlName="endTime"
+                  (click)="togglePicker(time.END)" [clearInput]="true"></ion-input>
               </ion-item>
               @if(showEndPicker) {
-              <app-date-time
-                [defaultValue]="endDefaultTime"
-                (togglePicker)="togglePicker(time.END)"
-                (onDateChange)="onDateChange($event, time.END)"
-              />
+              <app-date-time [defaultValue]="endDefaultTime" (togglePicker)="togglePicker(time.END)"
+                (onDateChange)="onDateChange($event, time.END)" />
               }
             </ion-col>
           </ion-row>
         </ion-grid>
 
-    </ion-card-content>
-  </ion-card>
+      </ion-card-content>
+    </ion-card>
 
-  <ion-card>
-    <ion-card-content class="ion-text-center">
-      <h2>
-        You have worked on <ion-note color="tertiary"><strong>{{ duration() }}</strong></ion-note> hours on <ion-note color="tertiary"><strong>{{ entryForm.get('workDate')?.value | date:'mediumDate' }}</strong></ion-note>.
-      </h2>
-    </ion-card-content>
-  </ion-card>
+    <ion-card>
+      <ion-card-content class="ion-text-center">
+        <h2>
+          You have worked on <ion-note color="tertiary"><strong>{{ duration() }}</strong></ion-note> hours on <ion-note
+            color="tertiary"><strong>{{ entryForm.get('workDate')?.value | date:'mediumDate' }}</strong></ion-note>.
+        </h2>
+      </ion-card-content>
+    </ion-card>
   </form>
 </ion-content>

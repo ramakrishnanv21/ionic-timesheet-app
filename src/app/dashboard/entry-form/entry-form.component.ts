@@ -7,7 +7,7 @@ import {
   signal,
   inject,
   computed,
-  input,
+  Input,
 } from '@angular/core';
 import {
   FormBuilder,
@@ -73,11 +73,11 @@ enum Time {
 export class EntryFormComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly modalCtrl = inject(ModalController);
-
+  formButtonName = signal('Save');
   @ViewChild('dateModal') dateModal?: IonModal;
 
   // Input for editing existing timesheet
-  timesheetData = input<Timesheet | null>(null);
+  @Input() timesheetData: Timesheet | null = null;
 
   time = Time;
   showStartPicker = false;
@@ -141,9 +141,10 @@ export class EntryFormComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    const existingData = this.timesheetData();
-
+    const existingData = this.timesheetData;
+    console.log('Existing data:', existingData);
     if (existingData) {
+      this.formButtonName.set('Update');
       // Editing mode - populate with existing data
       const workDate = existingData.workDate.includes('T')
         ? existingData.workDate
@@ -192,7 +193,7 @@ export class EntryFormComponent implements OnInit {
     const payload = {
       ...formValue,
       workDate: dateOnly,
-      id: this.timesheetData()?.id, // Include _id if editing
+      id: this.timesheetData?.id, // Include _id if editing
     };
     return this.modalCtrl.dismiss(payload, 'confirm');
   }
