@@ -1,7 +1,7 @@
 import { Inject, inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { Timesheet, TimesheetResponse } from '../model/Timesheet';
+import { Timesheet, TimesheetResponse, TotalHoursResponse } from '../model/Timesheet';
 
 @Injectable({
     providedIn: 'root',
@@ -19,12 +19,17 @@ export class TimesheetService {
         return this.http.put<Timesheet>(`${this.apiUrl}/api/timesheets`, timesheet);
     }
 
-    listTimesheets(year: number, month: number): Observable<Timesheet[]> {
+    listTimesheets(year: number, month: number): Observable<TimesheetResponse> {
         const params = { year: year.toString(), month: month.toString() };
-        return this.http.get<Timesheet[]>(`${this.apiUrl}/api/timesheets`, { params });
+        return this.http.get<TimesheetResponse>(`${this.apiUrl}/api/timesheets`, { params });
     }
 
     deleteTimesheet(timesheetId: string): Observable<void> {
         return this.http.delete<void>(`${this.apiUrl}/api/timesheets/${timesheetId}`);
+    }
+
+    getTotalHours(year: number, month: number): Observable<TotalHoursResponse> {
+        const params = { year: year.toString(), month: month.toString() };
+        return this.http.get<TotalHoursResponse>(`${this.apiUrl}/api/timesheets/total-hours`, { params });
     }
 }

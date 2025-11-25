@@ -85,9 +85,12 @@ export class EntryFormComponent implements OnInit {
 
   private static computeDefaultTime(h: number = 0): string {
     const d = new Date();
-    const hours = String(d.getHours() + h).padStart(2, '0');
-    const rounded = Math.ceil(d.getMinutes() / 5) * 5;
-    const minutes = rounded === 60 ? '00' : String(rounded).padStart(2, '0');
+    const roundedMinutes = Math.ceil(d.getMinutes() / 5) * 5;
+    d.setMinutes(roundedMinutes);
+    d.setHours(d.getHours() + h);
+
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
     return `${hours}:${minutes}`;
   }
 
@@ -123,7 +126,7 @@ export class EntryFormComponent implements OnInit {
 
     let diff = endDate.getTime() - startDate.getTime();
     if (diff < 0) {
-      return '00:00';
+      diff += 24 * 60 * 60 * 1000;
     }
 
     const hours = Math.floor(diff / 1000 / 60 / 60);
@@ -189,7 +192,7 @@ export class EntryFormComponent implements OnInit {
     const payload = {
       ...formValue,
       workDate: dateOnly,
-      _id: this.timesheetData()?._id, // Include _id if editing
+      id: this.timesheetData()?.id, // Include _id if editing
     };
     return this.modalCtrl.dismiss(payload, 'confirm');
   }

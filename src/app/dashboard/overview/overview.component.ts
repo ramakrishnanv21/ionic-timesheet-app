@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import {
   IonGrid,
   IonRow,
@@ -12,7 +12,7 @@ import { TotalAmountComponent } from '../total-amount/total-amount.component';
 import { WorkingHoursComponent } from '../working-hours/working-hours.component';
 import { EntryFormComponent } from '../entry-form/entry-form.component';
 import { TimesheetService } from '../../services/timesheet.service';
-import { TimesheetResponse } from '../../model/Timesheet';
+import { TimesheetResponse, TotalHoursResponse } from '../../model/Timesheet';
 
 @Component({
   selector: 'app-overview',
@@ -27,11 +27,22 @@ import { TimesheetResponse } from '../../model/Timesheet';
     WorkingHoursComponent,
   ],
 })
-export class OverviewComponent {
+export class OverviewComponent implements OnInit {
   private modalCtrl = inject(ModalController);
   private timesheetService = inject(TimesheetService);
   private loadingController = inject(LoadingController);
   private toastController = inject(ToastController);
+  totalHours = signal<string>('');
+
+  ngOnInit() {
+    this.timesheetService.getTotalHours(new Date().getFullYear(), new Date().getMonth() + 1).subscribe((response: TotalHoursResponse) => {
+      const totalHours = response.data.totalHours;
+      const hours = Math.floor(totalHours);
+      const minutes = Math.round((totalHours - hours) * 60);
+      const formattedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+      this.totalHours.set(`${hours} hours ${formattedMinutes} mins`);
+    });
+  }
 
   async openEntryForm() {
     const modal = await this.modalCtrl.create({

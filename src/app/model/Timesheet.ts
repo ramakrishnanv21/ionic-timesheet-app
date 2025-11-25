@@ -1,5 +1,5 @@
 export interface Timesheet {
-  _id?: string;
+  id?: string;
   workDate: string;
   startTime: string;
   endTime: string;
@@ -8,4 +8,13 @@ export interface Timesheet {
 export interface TimesheetResponse {
   status: 'success' | 'failed';
   message: string;
+  data: Timesheet[];
+}
+
+export interface TotalHoursResponse {
+  status: 'success' | 'failed';
+  message: string;
+  data: {
+    totalHours: number;
+  };
 }

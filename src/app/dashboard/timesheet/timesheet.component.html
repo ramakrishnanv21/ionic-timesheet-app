@@ -17,7 +17,7 @@
 </div>
 } @else {
 <ion-list class="ion-no-padding">
-	@for (timesheet of timesheets(); track timesheet._id) {
+	@for (timesheet of timesheets(); track timesheet.id) {
 	<ion-card class="ion-no-padding timesheet-card">
 		<ion-item-sliding>
 			<ion-item-options side="start">
@@ -30,7 +30,10 @@
 				<ion-label>
 					<div class="ion-text-wrap">
 						<h6 class="ion-no-margin">{{ timesheet.workDate | date:'fullDate' }}</h6>
-						<p class="ion-no-margin">{{ timesheet.startTime }} - {{ timesheet.endTime }}</p>
+						<div class="ion-no-margin">
+							<span>{{ timesheet.startTime }} - {{ timesheet.endTime }} </span>
+							<!-- <span>Week {{ getWeekNumber(timesheet.workDate) }} </span> -->
+						</div>
 					</div>
 				</ion-label>
 				<ion-note slot="end" color="primary" class="ion-no-margin duration">

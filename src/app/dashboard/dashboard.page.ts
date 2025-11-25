@@ -27,6 +27,7 @@ import { JwtService } from '../services/jwt.service';
 import { Router, RouterLink, RouterOutlet, NavigationEnd } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { filter } from 'rxjs';
+import { TimesheetService } from '../services/timesheet.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -57,6 +58,7 @@ export class DashboardPage implements OnInit {
   private jwtService = inject(JwtService);
   private authService = inject(AuthService);
   private toastController = inject(ToastController);
+  private timesheetService = inject(TimesheetService);
 
   private router = inject(Router);
   username = signal<string | null>(null);

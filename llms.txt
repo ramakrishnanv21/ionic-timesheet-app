@@ -1,0 +1,33 @@
+# Angular LLM Configuration File (llms.txt)
+# Target: Ionic Framework with Angular
+
+## 🎯 Primary Directives (Must-Haves)
+
+1.  **ALWAYS** use **Standalone Components** (`standalone: true`). Do not use NgModules for components, directives, or pipes unless strictly necessary for third-party compatibility (e.g., specific legacy libraries).
+2.  **ALWAYS** use **Signals** for state management (`signal()` and `computed()`). Discourage the use of RxJS Subjects and Observables for local component state. Use RxJS only for complex asynchronous operations, streams, and integrating with external APIs.
+3.  **ALWAYS** use **Control Flow** syntax (`@if`, `@for`, `@switch`) instead of structural directives (`*ngIf`, `*ngFor`, `*ngSwitch`).
+4.  **ALWAYS** use **Functional Interceptors** for HTTP logic instead of class-based interceptors.
+5.  **ALWAYS** use **Input Signal** syntax (`input()`) for component inputs instead of the `@Input()` decorator.
+6.  **ALWAYS** use the **Ionic component library** for UI elements (e.g., `ion-button`, `ion-list`, `ion-header`, `ion-content`). Ensure all components are imported from `@ionic/angular`.
+
+## 🛠️ Ionic-Specific Directives
+
+1.  **Routing:** Use the **Ionic CLI's convention** for page components, which includes an `<ion-header>`, `<ion-content>`, and an optional `<ion-footer>`.
+2.  **Layout:** When building a standard page, wrap all content in `<ion-content>` to ensure proper scrolling and safe area handling. Use **Ionic utilities** (e.g., `ion-padding`, `ion-text-center`) instead of custom CSS when an Ionic utility class exists.
+3.  **Navigation:** Use the **`NavController`** or Angular's `Router` for navigation. Prefer the Ionic Router for features like modal navigation and route guards related to mobile history.
+
+## 🚫 Anti-Patterns (To Avoid)
+
+1.  **DO NOT** use the `ng serve` output port (`4200`) in generated URLs; use the Ionic default port (`8100`) or reference a relative path.
+2.  **DO NOT** use `styleUrls` for component-specific styles. Prefer inline `<style>` tags or a single, small component CSS file.
+3.  **DO NOT** use `Renderer2` or direct DOM manipulation. Use Angular's host element APIs or signals for state-driven updates.
+4.  **DO NOT** use the `app-root` selector for custom components; use descriptive, hyphenated selectors (e.g., `app-user-profile`).
+
+## ✍️ Coding Style
+
+1.  **Type Safety:** Always use **explicit typing** with TypeScript. Avoid `any`.
+2.  **Service Injection:** Use **constructor injection** for services.
+3.  **Readability:** Keep component logic lean. Delegate complex logic and state management to **Services**.
+4.  **Naming:** Use **PascalCase** for component class names and **kebab-case** for selectors. Use **camelCase** for signal and variable names.
+
+# End of llms.txt

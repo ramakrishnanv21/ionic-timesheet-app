@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import {
 	IonLabel,
 	IonList,
@@ -14,7 +14,7 @@ import {
 	AlertController,
 } from '@ionic/angular/standalone';
 import { TimesheetService } from '../../services/timesheet.service';
-import { Timesheet } from '../../model/Timesheet';
+import { Timesheet, TimesheetResponse } from '../../model/Timesheet';
 import { DatePipe } from '@angular/common';
 import { EntryFormComponent } from '../entry-form/entry-form.component';
 import { addIcons } from 'ionicons';
@@ -71,8 +71,8 @@ export class TimesheetComponent implements OnInit {
 		console.log(`Fetching timesheets for ${year}-${month}...`);
 
 		this.timesheetService.listTimesheets(year, month).subscribe({
-			next: (data) => {
-				console.log('Timesheets received:', data);
+			next: (response: TimesheetResponse) => {
+				const data = response.data;
 				// Sort by date descending
 				const sortedData = data.sort((a, b) => new Date(b.workDate).getTime() - new Date(a.workDate).getTime());
 				this.timesheets.set(sortedData);
@@ -120,7 +120,7 @@ export class TimesheetComponent implements OnInit {
 					text: 'Delete',
 					role: 'destructive',
 					handler: () => {
-						this.timesheetService.deleteTimesheet(timesheet._id!).subscribe({
+						this.timesheetService.deleteTimesheet(timesheet.id!).subscribe({
 							next: () => {
 								console.log('Deleted timesheet:', timesheet);
 								this.loadTimesheets();
@@ -154,5 +154,12 @@ export class TimesheetComponent implements OnInit {
 		const minutesStr = minutes.toString().padStart(2, '0');
 
 		return { hours: hoursStr, minutes: minutesStr };
+	}
+
+	getWeekNumber(dateString: string): number {
+		const date = new Date(dateString);
+		const startOfYear = new Date(date.getFullYear(), 0, 1);
+		const dayOfYear = Math.floor((date.getTime() - startOfYear.getTime()) / (24 * 60 * 60 * 1000));
+		return Math.ceil((dayOfYear + startOfYear.getDay() + 1) / 7);
 	}
 }

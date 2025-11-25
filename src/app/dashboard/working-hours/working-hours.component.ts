@@ -1,4 +1,3 @@
-import { DecimalPipe } from '@angular/common';
 import { Component, input, OnInit } from '@angular/core';
 import {
   IonCard,
@@ -19,13 +18,12 @@ import {
     IonCardSubtitle,
     IonCardTitle,
     IonCard,
-    IonCardHeader,
-    DecimalPipe,
+    IonCardHeader
   ],
 })
 export class WorkingHoursComponent implements OnInit {
   hours = input.required<string>();
-  constructor() {}
+  constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 }

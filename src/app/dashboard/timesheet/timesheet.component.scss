@@ -1,17 +1,17 @@
 .timesheet-card {
-    padding: 8px;
-    margin: 8px;
+  padding: 8px;
+  margin: 8px;
 
-    h6 {
-        font-weight: bold;
-    }
+  h6 {
+    font-weight: bold;
+  }
 }
 .duration {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    span {
-        font-weight: bold;
-        font-size: 14px;
-    }
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  span {
+    font-weight: bold;
+    font-size: 14px;
+  }
 }
