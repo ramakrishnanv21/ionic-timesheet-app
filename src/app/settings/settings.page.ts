@@ -19,6 +19,8 @@ import {
 } from '@ionic/angular/standalone';
 import { UserService } from '../services/user.service';
 import { JwtService } from '../services/jwt.service';
+import { SettingsService } from '../services/settings.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-settings',
@@ -50,6 +52,8 @@ export class SettingsPage implements OnInit {
   private userService = inject(UserService);
   private jwtService = inject(JwtService);
   private toastController = inject(ToastController);
+  private settingsService = inject(SettingsService);
+  private router = inject(Router);
   lastUpdated = signal<Date | null>(null);
   settingsForm!: FormGroup;
   isLoading = false;
@@ -87,6 +91,10 @@ export class SettingsPage implements OnInit {
             email: response.data.email,
             hourlyRate: response.data.hourlyRate || '',
           });
+          // Set hourly rate in the service for application-wide access
+          if (response.data.hourlyRate) {
+            this.settingsService.setHourlyRate(response.data.hourlyRate);
+          }
         }
       },
       error: async (error) => {
@@ -114,7 +122,12 @@ export class SettingsPage implements OnInit {
       next: async (response) => {
         this.isSubmitting = false;
         if (response.status === 'success') {
+          // Update hourly rate in the service for application-wide access
+          if (formData.hourlyRate) {
+            this.settingsService.setHourlyRate(formData.hourlyRate);
+          }
           await this.showToast('Profile updated successfully!', 'success');
+          this.router.navigate(['/dashboard']);
         } else {
           await this.showToast(response.message || 'Update failed', 'danger');
         }
@@ -132,7 +145,7 @@ export class SettingsPage implements OnInit {
       message,
       duration: 3000,
       color,
-      position: 'top',
+      position: 'bottom',
     });
     await toast.present();
   }

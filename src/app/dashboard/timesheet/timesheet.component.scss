@@ -5,6 +5,14 @@
   h6 {
     font-weight: bold;
   }
+
+  ion-item {
+    --background: transparent;
+  }
+
+  &:nth-child(even) {
+    --background: var(--ion-color-light);
+  }
 }
 .duration {
   display: flex;

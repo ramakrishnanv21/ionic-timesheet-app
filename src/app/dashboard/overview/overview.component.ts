@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import {
   IonGrid,
   IonRow,
@@ -14,6 +14,7 @@ import { WorkingHoursComponent } from '../working-hours/working-hours.component'
 import { EntryFormComponent } from '../entry-form/entry-form.component';
 import { TimesheetService } from '../../services/timesheet.service';
 import { TimesheetResponse, TotalHoursResponse } from '../../model/Timesheet';
+import { SettingsService } from '../../services/settings.service';
 
 import { MonthFilterComponent } from '../../shared/month-filter/month-filter.component';
 
@@ -37,9 +38,18 @@ export class OverviewComponent implements OnInit {
   private timesheetService = inject(TimesheetService);
   private loadingController = inject(LoadingController);
   private toastController = inject(ToastController);
+  private settingsService = inject(SettingsService);
 
   totalHours = signal<string>('');
+  totalHoursNumeric = signal<number>(0); // Store total hours as a number
   selectedMonth = signal<string>(new Date().toISOString());
+  hourlyRate = this.settingsService.getHourlyRate();
+
+  // Computed signal for total amount (total hours * hourly rate)
+  totalAmount = computed(() => {
+    const amount = this.totalHoursNumeric() * this.hourlyRate();
+    return amount.toFixed(2);
+  });
 
   ngOnInit() {
     this.loadTotalHours();
@@ -49,6 +59,10 @@ export class OverviewComponent implements OnInit {
     const date = new Date(this.selectedMonth());
     this.timesheetService.getTotalHours(date.getFullYear(), date.getMonth() + 1).subscribe((response: TotalHoursResponse) => {
       const totalHours = response.data.totalHours;
+      // Store numeric value for calculations
+      this.totalHoursNumeric.set(totalHours);
+
+      // Format for display
       const hours = Math.floor(totalHours);
       const minutes = Math.round((totalHours - hours) * 60);
       const formattedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;

@@ -153,13 +153,26 @@ export class TimesheetComponent implements OnInit {
 					role: 'destructive',
 					handler: () => {
 						this.timesheetService.deleteTimesheet(timesheet.id!).subscribe({
-							next: () => {
+							next: async () => {
 								console.log('Deleted timesheet:', timesheet);
+								const toast = await this.toastController.create({
+									message: 'Timesheet deleted successfully',
+									duration: 2000,
+									color: 'success',
+									position: 'bottom'
+								});
+								await toast.present();
 								this.loadTimesheets();
 							},
-							error: (err) => {
+							error: async (err) => {
 								console.error('Failed to delete timesheet', err);
-								// Optionally show an error toast/alert
+								const toast = await this.toastController.create({
+									message: err.error?.message || 'Failed to delete timesheet. Please try again.',
+									duration: 2000,
+									color: 'danger',
+									position: 'bottom'
+								});
+								await toast.present();
 							}
 						});
 					},

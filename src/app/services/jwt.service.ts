@@ -31,4 +31,11 @@ export class JwtService {
   getToken(): string | null {
     return localStorage.getItem('auth_token');
   }
+
+  getHourlyRate(): number | null {
+    const token = localStorage.getItem('auth_token');
+    if (!token) return null;
+    const decoded: { hourlyRate?: number } = this.getDecodedToken(token);
+    return decoded?.hourlyRate || null;
+  }
 }

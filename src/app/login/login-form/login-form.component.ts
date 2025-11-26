@@ -14,6 +14,8 @@ import {
 import { AuthService } from '../../services/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { UserResponse } from '../../model/user';
+import { JwtService } from '../../services/jwt.service';
+import { SettingsService } from '../../services/settings.service';
 
 @Component({
   selector: 'app-login-form',
@@ -37,13 +39,16 @@ export class LoginFormComponent implements OnInit {
   private loadingController = inject(LoadingController);
   private toastController = inject(ToastController);
   private formBuilder = inject(FormBuilder);
+  private jwtService = inject(JwtService);
+  private settingsService = inject(SettingsService);
+
   loginForm = this.formBuilder.group({
     username: ['', Validators.required],
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
-  constructor() {}
+  constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   onSubmit() {
     if (this.loginForm.invalid) {
@@ -57,6 +62,12 @@ export class LoginFormComponent implements OnInit {
           console.log('response', response);
           if (response.status === 'success' && response?.token) {
             this.authService.authenticated(response.token);
+
+            // Extract and set hourly rate from JWT token
+            const hourlyRate = this.jwtService.getHourlyRate();
+            if (hourlyRate !== null) {
+              this.settingsService.setHourlyRate(hourlyRate);
+            }
           }
           this.loadingController
             .create({ keyboardClose: true, message: 'Logging in...' })
