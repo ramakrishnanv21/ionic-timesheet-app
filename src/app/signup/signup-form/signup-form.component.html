@@ -3,13 +3,15 @@
     <ion-row>
       <ion-col size-md="4" offset-md="4" class="ion-text-start">
         <ion-item>
-          <ion-input
-            [clearInput]="true"
-            type="text"
-            label="Email Address"
-            labelPlacement="floating"
-            formControlName="email"
-          />
+          <ion-input [clearInput]="true" type="text" label="Name" labelPlacement="floating" formControlName="name" />
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size-md="4" offset-md="4" class="ion-text-start">
+        <ion-item>
+          <ion-input [clearInput]="true" type="text" label="Email Address" labelPlacement="floating"
+            formControlName="email" />
         </ion-item>
         @if(signupForm.controls.email.errors?.['emailTaken']) {
         <ion-note color="danger" class="ion-padding">
@@ -21,12 +23,7 @@
     <ion-row>
       <ion-col size-md="4" offset-md="4" class="ion-text-start">
         <ion-item>
-          <ion-input
-            type="text"
-            label="Username"
-            labelPlacement="floating"
-            formControlName="username"
-          />
+          <ion-input type="text" label="Username" labelPlacement="floating" formControlName="username" />
         </ion-item>
         @if(signupForm.controls.username.errors?.['usernameTaken']) {
         <ion-note color="danger" class="ion-padding">
@@ -38,24 +35,15 @@
     <ion-row>
       <ion-col size-md="4" offset-md="4" class="ion-text-start">
         <ion-item>
-          <ion-input
-            type="password"
-            label="Password"
-            labelPlacement="floating"
-            formControlName="password"
-          />
+          <ion-input type="password" label="Password" labelPlacement="floating" formControlName="password" />
         </ion-item>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col size-md="4" offset-md="4" class="ion-text-start">
         <ion-item>
-          <ion-input
-            type="password"
-            label="Confirm Password"
-            labelPlacement="floating"
-            formControlName="confirm_password"
-          />
+          <ion-input type="password" label="Confirm Password" labelPlacement="floating"
+            formControlName="confirm_password" />
         </ion-item>
         @if(signupForm.errors?.['passwordsMismatch']) {
         <ion-note color="danger" class="ion-padding">

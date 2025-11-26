@@ -16,7 +16,6 @@ export class JwtService {
   getUsernameFromToken(): string | null {
     const token = localStorage.getItem('auth_token');
     if (!token) return null;
-
     const decoded: { name: string } = this.getDecodedToken(token);
     return decoded?.name || null;
   }

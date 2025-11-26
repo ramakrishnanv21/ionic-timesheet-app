@@ -21,11 +21,22 @@
     <ion-item-group class="form-title ion-text-center">
       <h2>Profile Settings</h2>
     </ion-item-group>
+
     <!-- Name Field -->
+    <ion-item [class.ion-invalid]="isFieldInvalid('name')" [class.ion-touched]="settingsForm.get('name')?.touched">
+      <ion-label position="stacked">Name <span class="required">*</span></ion-label>
+      <ion-input type="text" formControlName="name" placeholder="Enter your name" [clearInput]="true">
+      </ion-input>
+    </ion-item>
+    <div *ngIf="isFieldInvalid('name')" class="error-message">
+      {{ getErrorMessage('name') }}
+    </div>
+
+    <!-- Username Field -->
     <ion-item [class.ion-invalid]="isFieldInvalid('username')"
       [class.ion-touched]="settingsForm.get('username')?.touched">
-      <ion-label position="stacked">Name <span class="required">*</span></ion-label>
-      <ion-input type="text" formControlName="username" placeholder="Enter your name" [clearInput]="true">
+      <ion-label position="stacked">Username <span class="required">*</span></ion-label>
+      <ion-input type="text" formControlName="username" placeholder="Enter your username" [clearInput]="true">
       </ion-input>
     </ion-item>
     <div *ngIf="isFieldInvalid('username')" class="error-message">

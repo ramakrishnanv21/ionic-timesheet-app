@@ -44,6 +44,7 @@ export class SignupFormComponent implements OnInit {
 
   signupForm = this.formBuilder.group(
     {
+      name: ['', [Validators.required, Validators.minLength(2)]],
       email: [
         '',
         [Validators.required, Validators.email],
@@ -59,18 +60,18 @@ export class SignupFormComponent implements OnInit {
     },
     { validators: this.userValidationService.passwordMatchValidator }
   );
-  constructor() {}
+  constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   onSubmit() {
     if (this.signupForm.invalid) {
       return;
     }
-    const { email, username, password } = this.signupForm.value;
-    if (email && username && password) {
+    const { name, email, username, password } = this.signupForm.value;
+    if (name && email && username && password) {
       this.authService
-        .signup({ email, username, password })
+        .signup({ name, email, username, password })
         .subscribe((success) => {
           this.loadingController
             .create({ keyboardClose: true, message: 'Registering ...' })

@@ -61,6 +61,7 @@ export class SettingsPage implements OnInit {
 
   constructor() {
     this.settingsForm = this.fb.group({
+      name: ['', [Validators.required, Validators.minLength(2)]],
       username: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
       hourlyRate: ['', [Validators.required, Validators.min(0)]],
@@ -87,6 +88,7 @@ export class SettingsPage implements OnInit {
             this.lastUpdated.set(new Date(response.data.updatedAt));
           }
           this.settingsForm.patchValue({
+            name: response.data.name || '',
             username: response.data.username,
             email: response.data.email,
             hourlyRate: response.data.hourlyRate || '',
@@ -164,7 +166,8 @@ export class SettingsPage implements OnInit {
     if (field?.hasError('email')) {
       return 'Please enter a valid email address';
     }
-    if (field?.hasError('minLength')) {
+    if (field?.hasError('minlength')) {
+      if (fieldName === 'name') return 'Name must be at least 2 characters';
       return 'Username must be at least 3 characters';
     }
     if (field?.hasError('min')) {

@@ -11,6 +11,7 @@ export enum Role {
 }
 
 export interface SignupData {
+  name: string;
   username: string;
   email: string;
   password: string;
