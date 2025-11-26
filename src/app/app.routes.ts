@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './auth/auth-guard';
 
+import { usernameResolver } from './resolvers/username.resolver';
+
 export const routes: Routes = [
   {
     path: '',
@@ -16,6 +18,9 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./dashboard/dashboard.page').then((m) => m.DashboardPage),
     canMatch: [authGuard],
+    resolve: {
+      username: usernameResolver
+    },
     children: [
       {
         path: '',

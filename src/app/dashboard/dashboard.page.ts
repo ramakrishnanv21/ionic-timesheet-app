@@ -28,6 +28,7 @@ import { Router, RouterLink, RouterOutlet, NavigationEnd } from '@angular/router
 import { AuthService } from '../services/auth.service';
 import { filter } from 'rxjs';
 import { TimesheetService } from '../services/timesheet.service';
+import { SidebarMenuComponent } from '../layout/sidebar-menu/sidebar-menu.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -39,18 +40,17 @@ import { TimesheetService } from '../services/timesheet.service';
     IonItem,
     IonButtons,
     IonContent,
-    IonHeader,
     IonTitle,
     IonToolbar,
     CommonModule,
     FormsModule,
-    IonMenu,
     IonMenuButton,
     RouterLink,
     RouterOutlet,
     IonButton,
     IonSegment,
     IonSegmentButton,
+    SidebarMenuComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

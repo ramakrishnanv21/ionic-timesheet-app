@@ -7,6 +7,7 @@ import {
   IonCardSubtitle,
   IonCardContent,
   IonNote,
+  IonIcon,
 } from '@ionic/angular/standalone';
 
 @Component({
@@ -20,7 +21,8 @@ import {
     IonCardTitle,
     IonCard,
     IonCardHeader,
-    DatePipe
+    DatePipe,
+    IonIcon,
   ],
 })
 export class WorkingHoursComponent implements OnInit {

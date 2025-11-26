@@ -12,6 +12,7 @@ import {
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
+  calendarOutline,
   closeCircleOutline,
   closeOutline,
   heart,
@@ -31,6 +32,7 @@ addIcons({
   logOutOutline,
   closeCircleOutline,
   closeOutline,
+  calendarOutline
 });
 
 const db_password = 'Rama@3214';

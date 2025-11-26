@@ -1,16 +1,62 @@
 <ion-header [translucent]="true">
-  <ion-toolbar color="tertiary">
-    <ion-buttons>
-      <ion-back-button slot="start"></ion-back-button>
-      <ion-title>settings</ion-title>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/dashboard"></ion-back-button>
+      <ion-title>Settings</ion-title>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">settings</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="ion-padding">
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="loading-container">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Loading your settings...</p>
+  </div>
+  <ion-note color="secondary" class="last-updated">Last updated on {{ lastUpdated() | date: 'medium'
+    }}</ion-note>
+
+  <!-- Settings Form -->
+  <form *ngIf="!isLoading" [formGroup]="settingsForm" (ngSubmit)="onSubmit()">
+    <ion-item-group class="form-title ion-text-center">
+      <h2>Profile Settings</h2>
+    </ion-item-group>
+    <!-- Name Field -->
+    <ion-item [class.ion-invalid]="isFieldInvalid('username')"
+      [class.ion-touched]="settingsForm.get('username')?.touched">
+      <ion-label position="stacked">Name <span class="required">*</span></ion-label>
+      <ion-input type="text" formControlName="username" placeholder="Enter your name" [clearInput]="true">
+      </ion-input>
+    </ion-item>
+    <div *ngIf="isFieldInvalid('username')" class="error-message">
+      {{ getErrorMessage('username') }}
+    </div>
+
+    <!-- Email Field -->
+    <ion-item [class.ion-invalid]="isFieldInvalid('email')" [class.ion-touched]="settingsForm.get('email')?.touched">
+      <ion-label position="stacked">Email <span class="required">*</span></ion-label>
+      <ion-input type="email" formControlName="email" placeholder="Enter your email" [clearInput]="true">
+      </ion-input>
+    </ion-item>
+    <div *ngIf="isFieldInvalid('email')" class="error-message">
+      {{ getErrorMessage('email') }}
+    </div>
+
+    <!-- Hourly Rate Field -->
+    <ion-item [class.ion-invalid]="isFieldInvalid('hourlyRate')"
+      [class.ion-touched]="settingsForm.get('hourlyRate')?.touched">
+      <ion-label position="stacked">Hourly Rate <span class="required">*</span></ion-label>
+      <ion-input type="number" formControlName="hourlyRate" placeholder="Enter your hourly rate" [clearInput]="true">
+      </ion-input>
+    </ion-item>
+    <div *ngIf="isFieldInvalid('hourlyRate')" class="error-message">
+      {{ getErrorMessage('hourlyRate') }}
+    </div>
+
+    <!-- Submit Button -->
+    <ion-button expand="block" type="submit" [disabled]="isSubmitting" class="submit-button">
+      <ion-spinner *ngIf="isSubmitting" name="crescent"></ion-spinner>
+      <span *ngIf="!isSubmitting">Update Profile</span>
+    </ion-button>
+  </form>
 </ion-content>

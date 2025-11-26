@@ -21,6 +21,13 @@ export class JwtService {
     return decoded?.name || null;
   }
 
+  getUserId(): string | null {
+    const token = localStorage.getItem('auth_token');
+    if (!token) return null;
+    const decoded: { userId: string } = this.getDecodedToken(token);
+    return decoded?.userId || null;
+  }
+
   getToken(): string | null {
     return localStorage.getItem('auth_token');
   }
