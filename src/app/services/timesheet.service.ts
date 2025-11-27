@@ -12,24 +12,24 @@ export class TimesheetService {
     constructor(@Inject('API_URL') private apiUrl: string) { }
 
     addTimesheet(timesheet: Timesheet): Observable<TimesheetResponse> {
-        return this.http.post<TimesheetResponse>(`${this.apiUrl}/api/timesheets`, timesheet);
+        return this.http.post<TimesheetResponse>(`${this.apiUrl}/timesheets`, timesheet);
     }
 
     updateTimesheet(timesheet: Timesheet): Observable<TimesheetResponse> {
-        return this.http.put<TimesheetResponse>(`${this.apiUrl}/api/timesheets`, timesheet);
+        return this.http.put<TimesheetResponse>(`${this.apiUrl}/timesheets`, timesheet);
     }
 
     listTimesheets(year: number, month: number): Observable<TimesheetResponse> {
         const params = { year: year.toString(), month: month.toString() };
-        return this.http.get<TimesheetResponse>(`${this.apiUrl}/api/timesheets`, { params });
+        return this.http.get<TimesheetResponse>(`${this.apiUrl}/timesheets`, { params });
     }
 
     deleteTimesheet(timesheetId: string): Observable<void> {
-        return this.http.delete<void>(`${this.apiUrl}/api/timesheets/${timesheetId}`);
+        return this.http.delete<void>(`${this.apiUrl}/timesheets/${timesheetId}`);
     }
 
     getTotalHours(year: number, month: number): Observable<TotalHoursResponse> {
         const params = { year: year.toString(), month: month.toString() };
-        return this.http.get<TotalHoursResponse>(`${this.apiUrl}/api/timesheets/total-hours`, { params });
+        return this.http.get<TotalHoursResponse>(`${this.apiUrl}/timesheets/total-hours`, { params });
     }
 }

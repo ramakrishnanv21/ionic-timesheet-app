@@ -25,10 +25,10 @@ export class UserService {
     constructor(@Inject('API_URL') private apiUrl: string) { }
 
     getCurrentUser(userId: string): Observable<UserProfileResponse> {
-        return this.http.get<UserProfileResponse>(`${this.apiUrl}/api/users/${userId}`);
+        return this.http.get<UserProfileResponse>(`${this.apiUrl}/users/${userId}`);
     }
 
     updateUser(userId: string, userData: UserProfile): Observable<UserProfileResponse> {
-        return this.http.put<UserProfileResponse>(`${this.apiUrl}/api/users/${userId}`, userData);
+        return this.http.put<UserProfileResponse>(`${this.apiUrl}/users/${userId}`, userData);
     }
 }

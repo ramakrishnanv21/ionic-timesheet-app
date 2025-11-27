@@ -39,6 +39,8 @@ const db_password = 'Rama@3214';
 
 import { authInterceptor } from './interceptors/auth-interceptor';
 
+import { environment } from '../environments/environment';
+
 export const appConfig: ApplicationConfig = {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
@@ -50,6 +52,6 @@ export const appConfig: ApplicationConfig = {
       withComponentInputBinding()
     ),
     { provide: 'APP_NAME', useValue: 'TIMESHEET' },
-    { provide: 'API_URL', useValue: `http://localhost:8001` },
+    { provide: 'API_URL', useValue: environment.apiUrl },
   ],
 };

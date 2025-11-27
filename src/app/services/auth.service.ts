@@ -9,7 +9,7 @@ import { HttpClient } from '@angular/common/http';
 export class AuthService {
   private http = inject(HttpClient);
 
-  constructor(@Inject('API_URL') private apiUrl: string) {}
+  constructor(@Inject('API_URL') private apiUrl: string) { }
 
   isAuthenticated(): boolean {
     const authToken = localStorage.getItem('auth_token');
@@ -18,13 +18,13 @@ export class AuthService {
 
   login(username: string, password: string): Observable<UserResponse> {
     return this.http
-      .post<UserResponse>(`${this.apiUrl}/api/login`, { username, password })
+      .post<UserResponse>(`${this.apiUrl}/login`, { username, password })
       .pipe(tap((response) => response));
   }
 
   signup(userData: SignupData): Observable<SignupResponse> {
     return this.http
-      .post<SignupResponse>(`${this.apiUrl}/api/users`, {
+      .post<SignupResponse>(`${this.apiUrl}/users`, {
         ...userData,
         role: Role.USER,
       })

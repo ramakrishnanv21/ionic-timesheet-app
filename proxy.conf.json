@@ -1,0 +1,8 @@
+{
+  "/api": {
+    "target": "https://timesheet-api.vercel.app",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}
