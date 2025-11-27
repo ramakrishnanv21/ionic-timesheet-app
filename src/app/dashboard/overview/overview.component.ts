@@ -8,6 +8,7 @@ import {
   LoadingController,
   ToastController,
   IonCard,
+  IonNote,
 } from '@ionic/angular/standalone';
 import { TotalAmountComponent } from '../total-amount/total-amount.component';
 import { WorkingHoursComponent } from '../working-hours/working-hours.component';
@@ -17,6 +18,7 @@ import { TimesheetResponse, TotalHoursResponse } from '../../model/Timesheet';
 import { SettingsService } from '../../services/settings.service';
 
 import { MonthFilterComponent } from '../../shared/month-filter/month-filter.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-overview',
@@ -31,6 +33,8 @@ import { MonthFilterComponent } from '../../shared/month-filter/month-filter.com
     WorkingHoursComponent,
     MonthFilterComponent,
     IonCard,
+    IonNote,
+    RouterLink
   ],
 })
 export class OverviewComponent implements OnInit {

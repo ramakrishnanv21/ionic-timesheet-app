@@ -8,7 +8,10 @@
       <app-total-amount [amount]="totalAmount()" [month]="selectedMonth()" />
     </ion-col>
     <ion-col size="6">
-      <app-working-hours [hours]="totalHours()" [month]="selectedMonth()" />
+
+      <ion-note detail="false" routerLink="/dashboard/timesheet">
+        <app-working-hours [hours]="totalHours()" [month]="selectedMonth()" />
+      </ion-note>
     </ion-col>
   </ion-row>
 
