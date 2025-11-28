@@ -2,8 +2,6 @@ import { DatePipe } from '@angular/common';
 import {
   Component,
   OnInit,
-  ViewChild,
-  CUSTOM_ELEMENTS_SCHEMA,
   signal,
   inject,
   computed,
@@ -35,8 +33,8 @@ import {
   IonDatetime,
   IonDatetimeButton,
 } from '@ionic/angular/standalone';
-import { DateTimeComponent } from 'src/app/shared/date-time/date-time.component';
 import { Timesheet } from '../../model/Timesheet';
+import { IonDatetimeCustomEvent, DatetimeChangeEventDetail } from '@ionic/core';
 
 enum Time {
   START = 'startTime',
@@ -63,9 +61,7 @@ enum Time {
     ReactiveFormsModule,
     IonCard,
     IonCardContent,
-    DateTimeComponent,
     IonDatetime,
-    IonDatetimeButton,
     IonModal,
     DatePipe,
   ],
@@ -74,14 +70,11 @@ export class EntryFormComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly modalCtrl = inject(ModalController);
   formButtonName = signal('Save');
-  @ViewChild('dateModal') dateModal?: IonModal;
 
   // Input for editing existing timesheet
   @Input() timesheetData: Timesheet | null = null;
 
   time = Time;
-  showStartPicker = false;
-  showEndPicker = false;
 
   private static computeDefaultTime(h: number = 0): string {
     const d = new Date();
@@ -107,6 +100,69 @@ export class EntryFormComponent implements OnInit {
 
   get endDefaultTime(): string {
     return this.endDefaultTimeSignal();
+  }
+
+  private readonly workDateSignal = signal<string>(this.getTodayDate());
+
+  readonly formattedWorkDate = computed(() => {
+    const dateValue = this.workDateSignal();
+    if (!dateValue) return '';
+    const date = new Date(dateValue);
+    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+  });
+
+  private getTodayDate(): string {
+    return this.toLocalISOString(new Date());
+  }
+
+  // Helper to get YYYY-MM-DDTHH:mm:ss in local time
+  private toLocalISOString(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+  }
+
+  // Convert HH:mm to Local ISO string for ion-datetime
+  private timeToISOString(time: string): string {
+    if (!time) return this.toLocalISOString(new Date());
+    const [hours, minutes] = time.split(':');
+    const date = new Date();
+    date.setHours(parseInt(hours, 10));
+    date.setMinutes(parseInt(minutes, 10));
+    date.setSeconds(0);
+    return this.toLocalISOString(date);
+  }
+
+  get startTimeISO(): string {
+    const formValue = this.entryForm?.get('startTime')?.value;
+    return formValue ? this.timeToISOString(formValue) : this.timeToISOString(this.startDefaultTime);
+  }
+
+  get endTimeISO(): string {
+    const formValue = this.entryForm?.get('endTime')?.value;
+    return formValue ? this.timeToISOString(formValue) : this.timeToISOString(this.endDefaultTime);
+  }
+
+  get startTimeDisplay(): string {
+    return this.entryForm?.get('startTime')?.value || '';
+  }
+
+  get endTimeDisplay(): string {
+    return this.entryForm?.get('endTime')?.value || '';
+  }
+
+  get workDateDisplay(): string {
+    const dateVal = this.entryForm?.get('workDate')?.value;
+    if (!dateVal) return '';
+    return new Date(dateVal).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
   }
 
   readonly duration = computed(() => {
@@ -168,22 +224,59 @@ export class EntryFormComponent implements OnInit {
     }
   }
 
-  private getTodayDate(): string {
-    return new Date().toISOString();
-  }
+
 
   cancel() {
     return this.modalCtrl.dismiss(null, 'cancel');
   }
 
-  togglePicker(time: Time) {
-    if (time === this.time.START) {
-      this.showEndPicker = false;
-      this.showStartPicker = !this.showStartPicker;
-    } else {
-      this.showStartPicker = false;
-      this.showEndPicker = !this.showEndPicker;
+  confirmWorkDate(datetime: IonDatetime, modal: IonModal) {
+    const dateValue = datetime.value;
+    if (dateValue) {
+      // dateValue can be string or string[]
+      const dateStr = Array.isArray(dateValue) ? dateValue[0] : dateValue;
+      this.entryForm.patchValue({ workDate: dateStr });
+      this.workDateSignal.set(dateStr);
     }
+    modal.dismiss();
+  }
+
+  confirmStartTime(datetime: IonDatetime, modal: IonModal) {
+    const timeValue = datetime.value;
+    if (timeValue) {
+      const timeStr = Array.isArray(timeValue) ? timeValue[0] : timeValue;
+      let formattedTime = timeStr;
+
+      // Handle ISO string vs HH:mm format
+      if (timeStr.includes('T')) {
+        const timePart = timeStr.split('T')[1];
+        // Take first 5 chars (HH:mm)
+        formattedTime = timePart.substring(0, 5);
+      }
+
+      this.startDefaultTimeSignal.set(formattedTime);
+      this.entryForm.patchValue({ startTime: formattedTime });
+    }
+    modal.dismiss();
+  }
+
+  confirmEndTime(datetime: IonDatetime, modal: IonModal) {
+    const timeValue = datetime.value;
+    if (timeValue) {
+      const timeStr = Array.isArray(timeValue) ? timeValue[0] : timeValue;
+      let formattedTime = timeStr;
+
+      // Handle ISO string vs HH:mm format
+      if (timeStr.includes('T')) {
+        const timePart = timeStr.split('T')[1];
+        // Take first 5 chars (HH:mm)
+        formattedTime = timePart.substring(0, 5);
+      }
+
+      this.endDefaultTimeSignal.set(formattedTime);
+      this.entryForm.patchValue({ endTime: formattedTime });
+    }
+    modal.dismiss();
   }
 
   confirm() {
@@ -198,14 +291,4 @@ export class EntryFormComponent implements OnInit {
     return this.modalCtrl.dismiss(payload, 'confirm');
   }
 
-  onDateChange(time: string, field: Time) {
-    this.entryForm.patchValue({ [field]: time });
-    this.togglePicker(field);
-
-    if (field === this.time.START) {
-      this.startDefaultTimeSignal.set(time);
-    } else {
-      this.endDefaultTimeSignal.set(time);
-    }
-  }
 }

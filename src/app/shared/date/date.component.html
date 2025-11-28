@@ -1,0 +1,11 @@
+<ion-item class="ion-no-padding">
+  <ion-label>{{ label }}</ion-label>
+  <ion-datetime-button slot="end" [datetime]="dateId"></ion-datetime-button>
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime [id]="dateId" presentation="date" [(ngModel)]="value" (ionChange)="onDateSelected($event)"
+        [showDefaultButtons]="true">
+      </ion-datetime>
+    </ng-template>
+  </ion-modal>
+</ion-item>

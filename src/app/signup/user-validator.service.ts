@@ -12,7 +12,7 @@ import { catchError, map, Observable, of, switchMap, timer } from 'rxjs';
 export class UserValidationService {
   private http = inject(HttpClient);
 
-  constructor(@Inject('API_URL') private apiUrl: string) {}
+  constructor(@Inject('API_URL') private apiUrl: string) { }
 
   checkEmail(): AsyncValidatorFn {
     const debounceMs = 500;
@@ -27,7 +27,7 @@ export class UserValidationService {
         switchMap(() =>
           this.http
             .post<{ available: boolean }>(
-              `${this.apiUrl}/api/users/checkEmail`,
+              `${this.apiUrl}/users/checkEmail`,
               { email: control.value }
             )
             .pipe(
@@ -52,7 +52,7 @@ export class UserValidationService {
         switchMap(() =>
           this.http
             .post<{ available: boolean }>(
-              `${this.apiUrl}/api/users/checkUsername`,
+              `${this.apiUrl}/users/checkUsername`,
               { username: control.value }
             )
             .pipe(

@@ -1,12 +1,25 @@
 <ion-list lines="none" class="ion-no-margin">
     <ion-item>
-        <ion-label>Filter by Month</ion-label>
-        <ion-datetime-button slot="end" datetime="monthfliter"></ion-datetime-button>
+        <ion-input label="Filter by Month" labelPlacement="start" [value]="formattedMonth" readonly
+            id="open-month-modal" class="ion-text-end"></ion-input>
 
-        <ion-modal [keepContentsMounted]="true">
+        <ion-modal trigger="open-month-modal" [keepContentsMounted]="true" #monthModal>
             <ng-template>
-                <ion-datetime id="monthfliter" presentation="month-year" [value]="selectedMonth"
-                    (ionChange)="onDateChange($event)" [showDefaultButtons]="true"></ion-datetime>
+                <ion-header>
+                    <ion-toolbar>
+                        <ion-buttons slot="start">
+                            <ion-button (click)="cancel(monthModal)">Cancel</ion-button>
+                        </ion-buttons>
+                        <ion-buttons slot="end">
+                            <ion-button (click)="confirm(monthDatetime, monthModal)" [strong]="true">Done</ion-button>
+                        </ion-buttons>
+                    </ion-toolbar>
+                </ion-header>
+                <ion-content>
+                    <ion-datetime #monthDatetime id="monthfliter" presentation="month-year" [value]="selectedMonth"
+                        [showDefaultButtons]="false">
+                    </ion-datetime>
+                </ion-content>
             </ng-template>
         </ion-modal>
     </ion-item>

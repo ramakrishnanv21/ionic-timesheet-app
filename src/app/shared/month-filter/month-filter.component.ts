@@ -4,9 +4,14 @@ import {
 	IonItem,
 	IonLabel,
 	IonDatetime,
-	IonDatetimeButton,
 	IonModal,
-	IonList
+	IonList,
+	IonInput,
+	IonHeader,
+	IonToolbar,
+	IonButtons,
+	IonButton,
+	IonContent
 } from '@ionic/angular/standalone';
 import { FormsModule } from '@angular/forms';
 
@@ -18,9 +23,14 @@ import { FormsModule } from '@angular/forms';
 		IonItem,
 		IonLabel,
 		IonDatetime,
-		IonDatetimeButton,
 		IonModal,
 		IonList,
+		IonInput,
+		IonHeader,
+		IonToolbar,
+		IonButtons,
+		IonButton,
+		IonContent,
 		FormsModule,
 		CommonModule
 	]
@@ -29,8 +39,29 @@ export class MonthFilterComponent {
 	@Input() selectedMonth: string = new Date().toISOString();
 	@Output() monthChange = new EventEmitter<string>();
 
+	get formattedMonth(): string {
+		if (!this.selectedMonth) return '';
+		const date = new Date(this.selectedMonth);
+		return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+	}
+
+	confirm(datetime: IonDatetime, modal: IonModal) {
+		const value = datetime.value;
+		if (value) {
+			const dateStr = Array.isArray(value) ? value[0] : value;
+			this.selectedMonth = dateStr;
+			this.monthChange.emit(this.selectedMonth);
+		}
+		modal.dismiss();
+	}
+
+	cancel(modal: IonModal) {
+		modal.dismiss();
+	}
+
 	onDateChange(event: any) {
-		this.selectedMonth = event.detail.value;
-		this.monthChange.emit(this.selectedMonth);
+		// Optional: Update local state immediately if desired, 
+		// but for "Done" button logic, we usually wait for confirm.
+		// Keeping this empty or removing it is fine if we rely on 'confirm'.
 	}
 }

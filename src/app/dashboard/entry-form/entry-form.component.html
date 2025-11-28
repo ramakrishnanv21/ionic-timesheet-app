@@ -21,12 +21,26 @@
           <ion-row>
             <ion-col size="12" class="ion-text-center">
               <ion-item class="ion-no-padding">
-                <ion-label>Work Date</ion-label>
-                <ion-datetime-button slot="end" datetime="entryFormDate"></ion-datetime-button>
-                <ion-modal [keepContentsMounted]="true">
+                <ion-input label="Work Date" labelPlacement="floating" [value]="workDateDisplay" readonly
+                  id="open-date-modal"></ion-input>
+                <ion-modal trigger="open-date-modal" [keepContentsMounted]="true" #workDateModal>
                   <ng-template>
-                    <ion-datetime id="entryFormDate" presentation="date" formControlName="workDate"
-                      [showDefaultButtons]="true"></ion-datetime>
+                    <ion-header>
+                      <ion-toolbar>
+                        <ion-buttons slot="start">
+                          <ion-button (click)="workDateModal.dismiss()">Cancel</ion-button>
+                        </ion-buttons>
+                        <ion-buttons slot="end">
+                          <ion-button (click)="confirmWorkDate(workDate, workDateModal)"
+                            [strong]="true">Done</ion-button>
+                        </ion-buttons>
+                      </ion-toolbar>
+                    </ion-header>
+                    <ion-content>
+                      <ion-datetime #workDate id="entryFormDate" presentation="date"
+                        [value]="entryForm.get('workDate')?.value" [showDefaultButtons]="false">
+                      </ion-datetime>
+                    </ion-content>
                   </ng-template>
                 </ion-modal>
               </ion-item>
@@ -35,25 +49,60 @@
           <ion-row>
             <ion-col size="12" class="ion-text-center">
               <ion-item class="ion-no-padding">
-                <ion-input type="text" label="Start Time" labelPlacement="floating" (click)="togglePicker(time.START)"
-                  formControlName="startTime" [clearInput]="true"></ion-input>
+                <ion-input label="Start Time" labelPlacement="floating" [value]="startTimeDisplay" readonly
+                  id="open-start-modal"></ion-input>
+                <ion-modal trigger="open-start-modal" [keepContentsMounted]="true" #startTimeModal
+                  [initialBreakpoint]="0.5" [breakpoints]="[0, 0.5]">
+                  <ng-template>
+                    <ion-header>
+                      <ion-toolbar>
+                        <ion-buttons slot="start">
+                          <ion-button (click)="startTimeModal.dismiss()">Cancel</ion-button>
+                        </ion-buttons>
+                        <ion-buttons slot="end">
+                          <ion-button (click)="confirmStartTime(startTime, startTimeModal)"
+                            [strong]="true">Done</ion-button>
+                        </ion-buttons>
+                      </ion-toolbar>
+                    </ion-header>
+                    <ion-content>
+                      <ion-datetime #startTime id="startTimeInput" presentation="time" [value]="startTimeISO"
+                        [preferWheel]="true" locale="es-ES" minuteValues="0,5,10,15,20,25,30,35,40,45,50,55"
+                        [showDefaultButtons]="false">
+                      </ion-datetime>
+                    </ion-content>
+                  </ng-template>
+                </ion-modal>
               </ion-item>
-              @if(showStartPicker) {
-              <app-date-time [defaultValue]="startDefaultTime" (togglePicker)="togglePicker(time.START)"
-                (onDateChange)="onDateChange($event, time.START)" />
-              }
             </ion-col>
           </ion-row>
           <ion-row>
             <ion-col class="ion-text-center">
               <ion-item class="ion-no-padding">
-                <ion-input type="text" label="End Time" labelPlacement="floating" formControlName="endTime"
-                  (click)="togglePicker(time.END)" [clearInput]="true"></ion-input>
+                <ion-input label="End Time" labelPlacement="floating" [value]="endTimeDisplay" readonly
+                  id="open-end-modal"></ion-input>
+                <ion-modal trigger="open-end-modal" [keepContentsMounted]="true" #endTimeModal [initialBreakpoint]="0.5"
+                  [breakpoints]="[0, 0.5]">
+                  <ng-template>
+                    <ion-header>
+                      <ion-toolbar>
+                        <ion-buttons slot="start">
+                          <ion-button (click)="endTimeModal.dismiss()">Cancel</ion-button>
+                        </ion-buttons>
+                        <ion-buttons slot="end">
+                          <ion-button (click)="confirmEndTime(endTime, endTimeModal)" [strong]="true">Done</ion-button>
+                        </ion-buttons>
+                      </ion-toolbar>
+                    </ion-header>
+                    <ion-content>
+                      <ion-datetime #endTime id="endTimeInput" presentation="time" [value]="endTimeISO"
+                        [preferWheel]="true" locale="es-ES" minuteValues="0,5,10,15,20,25,30,35,40,45,50,55"
+                        [showDefaultButtons]="false">
+                      </ion-datetime>
+                    </ion-content>
+                  </ng-template>
+                </ion-modal>
               </ion-item>
-              @if(showEndPicker) {
-              <app-date-time [defaultValue]="endDefaultTime" (togglePicker)="togglePicker(time.END)"
-                (onDateChange)="onDateChange($event, time.END)" />
-              }
             </ion-col>
           </ion-row>
         </ion-grid>
