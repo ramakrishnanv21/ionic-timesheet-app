@@ -74,29 +74,16 @@ export class EntryFormComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly modalCtrl = inject(ModalController);
   formButtonName = signal('Save');
-
-  // Input for editing existing timesheet
   @Input() timesheetData: Timesheet | null = null;
-
   time = Time;
 
-  private static computeDefaultTime(h: number = 0): string {
-    const d = new Date();
-    const roundedMinutes = Math.ceil(d.getMinutes() / 5) * 5;
-    d.setMinutes(roundedMinutes);
-    d.setHours(d.getHours() + h);
+  defatultStartTime = '17:00';
+  defatultEndTime = '21:00';
+  defatultBreakTime = '00';
 
-    const hours = String(d.getHours()).padStart(2, '0');
-    const minutes = String(d.getMinutes()).padStart(2, '0');
-    return `${hours}:${minutes}`;
-  }
-
-  private readonly startDefaultTimeSignal = signal<string>(
-    EntryFormComponent.computeDefaultTime()
-  );
-  private readonly endDefaultTimeSignal = signal<string>(
-    EntryFormComponent.computeDefaultTime(2)
-  );
+  private readonly startDefaultTimeSignal = signal<string>(this.defatultStartTime);
+  private readonly endDefaultTimeSignal = signal<string>(this.defatultEndTime);
+  private readonly breakTimeSignal = signal<string>(this.defatultBreakTime);
 
   get startDefaultTime(): string {
     return this.startDefaultTimeSignal();
@@ -172,10 +159,11 @@ export class EntryFormComponent implements OnInit {
   readonly duration = computed(() => {
     const start = this.startDefaultTimeSignal();
     const end = this.endDefaultTimeSignal();
-    return this.calculateDuration(start, end);
+    const breakTime = this.breakTimeSignal();
+    return this.calculateDuration(start, end, breakTime);
   });
 
-  private calculateDuration(start: string, end: string): string {
+  private calculateDuration(start: string, end: string, breakTime: string = '0'): string {
     if (!start || !end) return '';
 
     const [startHours, startMinutes] = start.split(':').map(Number);
@@ -187,6 +175,16 @@ export class EntryFormComponent implements OnInit {
     let diff = endDate.getTime() - startDate.getTime();
     if (diff < 0) {
       diff += 24 * 60 * 60 * 1000;
+    }
+
+    // Subtract break time (in minutes)
+    const breakMinutes = parseInt(breakTime, 10);
+    if (!isNaN(breakMinutes) && breakMinutes > 0) {
+      diff -= breakMinutes * 60 * 1000;
+    }
+
+    if (diff < 0) {
+      diff = 0;
     }
 
     const hours = Math.floor(diff / 1000 / 60 / 60);
@@ -211,6 +209,7 @@ export class EntryFormComponent implements OnInit {
 
       this.startDefaultTimeSignal.set(existingData.startTime);
       this.endDefaultTimeSignal.set(existingData.endTime);
+      this.breakTimeSignal.set(existingData.breakTime || '00');
 
       this.entryForm = this.fb.group({
         workDate: [workDate, Validators.required],
@@ -227,6 +226,11 @@ export class EntryFormComponent implements OnInit {
         breakTime: ['00', Validators.required],
       });
     }
+
+    // Subscribe to break time changes to update the signal
+    this.entryForm.get('breakTime')?.valueChanges.subscribe(value => {
+      this.breakTimeSignal.set(value || '00');
+    });
   }
 
   cancel() {
