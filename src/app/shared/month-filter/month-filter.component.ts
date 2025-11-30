@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
 	IonItem,
-	IonLabel,
 	IonDatetime,
 	IonModal,
 	IonList,
@@ -21,7 +20,6 @@ import { FormsModule } from '@angular/forms';
 	standalone: true,
 	imports: [
 		IonItem,
-		IonLabel,
 		IonDatetime,
 		IonModal,
 		IonList,
@@ -57,11 +55,5 @@ export class MonthFilterComponent {
 
 	cancel(modal: IonModal) {
 		modal.dismiss();
-	}
-
-	onDateChange(event: any) {
-		// Optional: Update local state immediately if desired, 
-		// but for "Done" button logic, we usually wait for confirm.
-		// Keeping this empty or removing it is fine if we rely on 'confirm'.
 	}
 }

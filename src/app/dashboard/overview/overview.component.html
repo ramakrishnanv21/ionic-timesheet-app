@@ -4,11 +4,10 @@
 
 <ion-grid>
   <ion-row>
-    <ion-col size="6">
+    <ion-col size="6" style="cursor: pointer;">
       <app-total-amount [amount]="totalAmount()" [month]="selectedMonth()" />
     </ion-col>
-    <ion-col size="6">
-
+    <ion-col size="6" style="cursor: pointer;">
       <ion-note detail="false" routerLink="/dashboard/timesheet">
         <app-working-hours [hours]="totalHours()" [month]="selectedMonth()" />
       </ion-note>

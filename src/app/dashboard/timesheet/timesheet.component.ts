@@ -96,7 +96,7 @@ export class TimesheetComponent implements OnInit {
 		this.loadTimesheets();
 	}
 
-	async editTimesheet(timesheet: Timesheet) {
+	async editTimesheet(timesheet: Timesheet, slidingItem: IonItemSliding) {
 		const modal = await this.modalCtrl.create({
 			component: EntryFormComponent,
 			componentProps: {
@@ -106,6 +106,7 @@ export class TimesheetComponent implements OnInit {
 		modal.present();
 
 		const response = await modal.onWillDismiss();
+		slidingItem.close();
 		if (response.role === 'confirm') {
 			const loadingEl = await this.loadingController.create({
 				keyboardClose: true,

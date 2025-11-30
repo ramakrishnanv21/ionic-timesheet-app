@@ -32,6 +32,8 @@ import {
   IonModal,
   IonDatetime,
   IonDatetimeButton,
+  IonSelect,
+  IonSelectOption,
 } from '@ionic/angular/standalone';
 import { Timesheet } from '../../model/Timesheet';
 import { IonDatetimeCustomEvent, DatetimeChangeEventDetail } from '@ionic/core';
@@ -63,6 +65,8 @@ enum Time {
     IonCardContent,
     IonDatetime,
     IonModal,
+    IonSelect,
+    IonSelectOption,
     DatePipe,
   ],
 })
@@ -198,7 +202,6 @@ export class EntryFormComponent implements OnInit {
 
   ngOnInit() {
     const existingData = this.timesheetData;
-    console.log('Existing data:', existingData);
     if (existingData) {
       this.formButtonName.set('Update');
       // Editing mode - populate with existing data
@@ -213,6 +216,7 @@ export class EntryFormComponent implements OnInit {
         workDate: [workDate, Validators.required],
         startTime: [existingData.startTime, Validators.required],
         endTime: [existingData.endTime, Validators.required],
+        breakTime: [existingData.breakTime || '00', Validators.required],
       });
     } else {
       // New entry mode - use defaults
@@ -220,11 +224,10 @@ export class EntryFormComponent implements OnInit {
         workDate: [this.getTodayDate(), Validators.required],
         startTime: [this.startDefaultTime, Validators.required],
         endTime: [this.endDefaultTime, Validators.required],
+        breakTime: ['00', Validators.required],
       });
     }
   }
-
-
 
   cancel() {
     return this.modalCtrl.dismiss(null, 'cancel');
@@ -286,7 +289,7 @@ export class EntryFormComponent implements OnInit {
     const payload = {
       ...formValue,
       workDate: dateOnly,
-      id: this.timesheetData?.id, // Include _id if editing
+      id: this.timesheetData?.id,
     };
     return this.modalCtrl.dismiss(payload, 'confirm');
   }

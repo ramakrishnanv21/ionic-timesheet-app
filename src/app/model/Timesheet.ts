@@ -3,6 +3,7 @@ export interface Timesheet {
   workDate: string;
   startTime: string;
   endTime: string;
+  breakTime?: string;
 }
 
 export interface TimesheetResponse {
