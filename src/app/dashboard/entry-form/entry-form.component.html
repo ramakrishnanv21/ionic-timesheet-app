@@ -36,7 +36,7 @@
                         </ion-buttons>
                       </ion-toolbar>
                     </ion-header>
-                    <ion-content>
+                    <ion-content class="ion-text-center">
                       <ion-datetime #workDate id="entryFormDate" presentation="date"
                         [value]="entryForm.get('workDate')?.value" [showDefaultButtons]="false">
                       </ion-datetime>
@@ -64,7 +64,7 @@
                         </ion-buttons>
                       </ion-toolbar>
                     </ion-header>
-                    <ion-content>
+                    <ion-content class="ion-text-center">
                       <ion-datetime #startTime id="startTimeInput" presentation="time" [value]="startTimeISO"
                         hourValues="12,13,14,15,16,17,18,19,20,21,22" [preferWheel]="true" locale="es-ES"
                         minuteValues="0,5,10,15,20,25,30,35,40,45,50,55" [showDefaultButtons]="false">
@@ -92,7 +92,7 @@
                         </ion-buttons>
                       </ion-toolbar>
                     </ion-header>
-                    <ion-content>
+                    <ion-content class="ion-text-center">
                       <ion-datetime #endTime id="endTimeInput" presentation="time" [value]="endTimeISO"
                         hourValues="12,13,14,15,16,17,18,19,20,21,22" [preferWheel]="true" locale="es-ES"
                         minuteValues="0,5,10,15,20,25,30,35,40,45,50,55" [showDefaultButtons]="false">

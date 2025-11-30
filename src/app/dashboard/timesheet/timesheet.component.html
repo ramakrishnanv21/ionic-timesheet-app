@@ -37,14 +37,15 @@
 					</div>
 				</ion-label>
 				<ion-note slot="end" color="primary" class="ion-no-margin duration">
-					@if (calculateDuration(timesheet.startTime, timesheet.endTime).hours !== '00') {
-					<span>{{ calculateDuration(timesheet.startTime,
-						timesheet.endTime).hours
-						}}
-						hours</span>
+					@let duration = calculateDuration(timesheet.startTime, timesheet.endTime, timesheet.breakTime);
+					@if (duration.hours !== '00') {
+					<span>{{ duration.hours }} hours</span>
 					}
-					@if (calculateDuration(timesheet.startTime, timesheet.endTime).minutes !== '00') {
-					<span>{{ calculateDuration(timesheet.startTime, timesheet.endTime).minutes }} mins</span>
+					@if (duration.minutes !== '00') {
+					<span>{{ duration.minutes }} mins</span>
+					}
+					@if (timesheet?.breakTime !== '00') {
+					<span class="break-time">{{ timesheet.breakTime }} mins break</span>
 					}
 				</ion-note>
 			</ion-item>

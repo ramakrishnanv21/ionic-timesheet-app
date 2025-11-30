@@ -2,3 +2,23 @@
   display: flex;
   margin-bottom: 10px;
 }
+
+ion-datetime {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+
+  &::part(time-body) {
+    min-width: 100%;
+  }
+}
+
+// Ensure modal content centers the datetime
+ion-modal ion-content {
+  --padding-start: 0;
+  --padding-end: 0;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

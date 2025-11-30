@@ -2,45 +2,30 @@
   <ion-grid>
     <ion-row>
       <ion-col size-md="4" offset-md="4" class="ion-text-center">
-        <ion-item>
-          <ion-input
-            [clearInput]="true"
-            type="text"
-            label="Username"
-            labelPlacement="floating"
-            formControlName="username"
-          ></ion-input>
+        <ion-item mode="md">
+          <ion-input [clearInput]="true" type="text" label="Username" labelPlacement="floating"
+            formControlName="username" mode="md"></ion-input>
         </ion-item>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col size-md="4" offset-md="4" class="ion-text-center">
-        <ion-item>
-          <ion-input
-            type="password"
-            [clearInput]="true"
-            label="Password"
-            labelPlacement="floating"
-            formControlName="password"
-          ></ion-input>
+        <ion-item mode="md">
+          <ion-input type="password" [clearInput]="true" label="Password" labelPlacement="floating"
+            formControlName="password" mode="md"></ion-input>
         </ion-item>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col size-md="4" offset-md="4" class="ion-text-center">
-        <ion-button type="submit" fill="solid" [disabled]="loginForm.invalid">
+        <ion-button type="submit" fill="solid" [disabled]="loginForm.invalid" mode="md">
           Login
         </ion-button>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col size-md="4" offset-md="4" class="ion-text-center">
-        <ion-button
-          expand="block"
-          fill="outline"
-          type="button"
-          routerLink="/signup"
-        >
+        <ion-button expand="block" fill="outline" type="button" routerLink="/signup" mode="md">
           Switch to Signup
         </ion-button>
       </ion-col>

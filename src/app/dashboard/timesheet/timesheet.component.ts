@@ -183,7 +183,7 @@ export class TimesheetComponent implements OnInit {
 
 		await alert.present();
 	}
-	calculateDuration(startTime: string, endTime: string): { hours: string, minutes: string } {
+	calculateDuration(startTime: string, endTime: string, breakTime: string = '0'): { hours: string, minutes: string } {
 		const start = new Date(`2000-01-01T${startTime}`);
 		const end = new Date(`2000-01-01T${endTime}`);
 		let diff = end.getTime() - start.getTime();
@@ -191,6 +191,18 @@ export class TimesheetComponent implements OnInit {
 		if (diff < 0) {
 			// Handle overnight shifts if necessary, or assume same day
 			diff += 24 * 60 * 60 * 1000;
+		}
+
+		// Subtract break time
+		if (breakTime) {
+			const breakMinutes = parseInt(breakTime, 10);
+			if (!isNaN(breakMinutes)) {
+				diff -= breakMinutes * 60 * 1000;
+			}
+		}
+
+		if (diff < 0) {
+			diff = 0;
 		}
 
 		const hours = Math.floor(diff / (1000 * 60 * 60));
